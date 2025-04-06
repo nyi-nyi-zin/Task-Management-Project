@@ -14,6 +14,7 @@ export const registerUser = async (payload) => {
 export const loginUser = async (payload) => {
   try {
     const response = await axiosInstance.post("/login", payload);
+    console.log(response.data);
     return response.data;
   } catch (error) {
     throw error.response.data;

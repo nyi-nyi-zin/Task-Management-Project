@@ -1,10 +1,12 @@
 import { TextField, Button, Box } from "@mui/material";
-import { useState } from "react";
 import { loginUser, registerUser } from "../../apicalls/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setUser } from "../../store/slices/userSlice";
 
 const AuthForm = ({ isLoginPage }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOnSubmit = async (event) => {
     event.preventDefault();
@@ -15,11 +17,13 @@ const AuthForm = ({ isLoginPage }) => {
       password: formData.get("password"),
     };
 
-    console.log(values);
     if (isLoginPage) {
       try {
         const response = await loginUser(values);
+        console.log(response);
         if (response.isSuccess) {
+          localStorage.setItem("token", response.token);
+          dispatch(setUser(response.user));
           navigate("/");
         } else {
           throw new Error(response.message);

@@ -79,3 +79,25 @@ exports.loginUser = async (req, res) => {
     });
   }
 };
+
+exports.checkCurrentUser = async (req, res) => {
+  try {
+    const userDoc = await User.findByPk(req.userId, {
+      attributes: ["email"],
+    });
+
+    if (!userDoc) {
+      throw new Error("Unauthorized User");
+    }
+    return res.status(200).json({
+      isSuccess: true,
+      message: "User is authorized",
+      userDoc,
+    });
+  } catch (error) {
+    return res.status(401).json({
+      isSuccess: false,
+      message: error.message,
+    });
+  }
+};
