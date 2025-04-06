@@ -5,6 +5,7 @@ import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import AuthProvider from "./providers/AuthProvider";
 import Profile from "./pages/profile/Index";
+import Board from "./pages/profile/Board";
 
 function App() {
   const router = createBrowserRouter([
@@ -33,6 +34,14 @@ function App() {
           element: (
             <AuthProvider>
               <Profile />
+            </AuthProvider>
+          ),
+        },
+        {
+          path: "/board/:boardId",
+          element: (
+            <AuthProvider>
+              <Board />
             </AuthProvider>
           ),
         },

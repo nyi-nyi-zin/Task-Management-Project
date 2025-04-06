@@ -54,3 +54,13 @@ export const fetchOldBoardTitle = async (id) => {
     throw error.response.data;
   }
 };
+
+//get single board by id
+export const getSingleBoard = async (id) => {
+  try {
+    const response = await axiosInstance.get(`/get-board/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};

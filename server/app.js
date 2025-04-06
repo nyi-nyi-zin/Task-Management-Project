@@ -13,7 +13,8 @@ const sequelize = require("./utils/database");
 
 // routes imports
 const authRoutes = require("./routes/auth");
-const taskRoutes = require("./routes/task");
+const boardRoutes = require("./routes/board");
+const listRoutes = require("./routes/list");
 
 app.use(
   cors({
@@ -27,7 +28,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use(authRoutes);
-app.use(taskRoutes);
+app.use(boardRoutes);
+app.use(listRoutes);
 
 // Associations
 Board.hasMany(List, { foreignKey: "boardId", onDelete: "CASCADE" });

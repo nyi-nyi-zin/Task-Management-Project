@@ -133,3 +133,30 @@ exports.fetchOldBoardTitle = async (req, res) => {
     });
   }
 };
+
+//get single board by id
+exports.getSingleBoard = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const boardDoc = await Board.findOne({ where: { id } });
+
+    if (!boardDoc) {
+      return res.status(404).json({
+        message: "Board not found",
+        isSuccess: false,
+      });
+    }
+    return res.status(200).json({
+      message: "Board fetched successfully",
+      board: boardDoc,
+      isSuccess: true,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error fetching board",
+      error: error,
+      isSuccess: false,
+    });
+  }
+};

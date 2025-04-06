@@ -10,9 +10,10 @@ import {
   createBoard,
   updateBoard,
   deleteBoard,
-} from "../../apicalls/task";
+} from "../../apicalls/board";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 
 function Index() {
   const { user } = useSelector((state) => state.reducer.user);
@@ -21,6 +22,7 @@ function Index() {
   const [boardName, setBoardName] = useState("");
   const [editingBoardId, setEditingBoardId] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
+  const navigate = useNavigate();
 
   const fetchAllBoards = async () => {
     try {
@@ -129,9 +131,12 @@ function Index() {
         {board.map((item) => (
           <Card
             sx={{ minWidth: 275 }}
-            className="mt-4"
+            className="mt-4 cursor-pointer"
             key={item.id}
             classes={{ root: "w-[80%] bg-amber-200" }}
+            onClick={() => {
+              navigate(`/board/${item.id}`);
+            }}
           >
             <CardContent>
               {editingBoardId === item.id ? (
@@ -139,13 +144,17 @@ function Index() {
                   <TextField
                     fullWidth
                     value={editingTitle}
-                    onChange={(e) => setEditingTitle(e.target.value)}
+                    onChange={(e) => {
+                      setEditingTitle(e.target.value);
+                    }}
+                    onClick={(e) => e.stopPropagation()}
                   />
                   <Button
                     size="small"
                     variant="contained"
-                    onClick={() => {
+                    onClick={(e) => {
                       handleUpdateBoard(item.id, editingTitle);
+                      e.stopPropagation();
                     }}
                   >
                     OK
@@ -158,15 +167,21 @@ function Index() {
             <CardActions>
               <Button
                 size="small"
-                onClick={() => {
+                onClick={(e) => {
                   setEditingBoardId(item.id);
                   setEditingTitle(item.title);
+                  e.stopPropagation();
                 }}
               >
                 Edit
               </Button>
-
-              <Button size="small" onClick={() => handleDeleteBoard(item.id)}>
+              <Button
+                size="small"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteBoard(item.id);
+                }}
+              >
                 Delete
               </Button>
             </CardActions>
