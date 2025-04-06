@@ -24,7 +24,7 @@ const AuthForm = ({ isLoginPage }) => {
         if (response.isSuccess) {
           localStorage.setItem("token", response.token);
           dispatch(setUser(response.user));
-          navigate("/");
+          navigate("/profile");
         } else {
           throw new Error(response.message);
         }
