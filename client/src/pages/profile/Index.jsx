@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { CardActions } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   fetchBoards,
   createBoard,
@@ -23,10 +23,11 @@ function Index() {
   const [editingBoardId, setEditingBoardId] = useState(null);
   const [editingTitle, setEditingTitle] = useState("");
   const navigate = useNavigate();
+  const textFieldRef = useRef(null);
 
   const fetchAllBoards = async () => {
     try {
-      const response = await fetchBoards();
+      const response = await fetchBoards(user.id);
       if (response.isSuccess) {
         setBoards(response.boards);
       } else {
@@ -38,13 +39,22 @@ function Index() {
   };
 
   useEffect(() => {
-    fetchAllBoards();
-  }, []);
+    if (user && user.id) {
+      fetchAllBoards();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (showForm && textFieldRef.current) {
+      textFieldRef.current.focus();
+    }
+  }, [showForm]);
 
   const handleNewBoard = async () => {
     try {
       const response = await createBoard({
         title: boardName,
+        userId: user.id,
       });
       if (response.isSuccess) {
         setBoardName("");
@@ -107,6 +117,7 @@ function Index() {
             autoComplete="off"
           >
             <TextField
+              inputRef={textFieldRef}
               id="outlined-basic"
               label="Board Name"
               variant="outlined"

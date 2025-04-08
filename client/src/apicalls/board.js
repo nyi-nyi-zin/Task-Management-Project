@@ -11,9 +11,9 @@ export const createBoard = async (payload) => {
 };
 
 //get all boards
-export const fetchBoards = async () => {
+export const fetchBoards = async (userId) => {
   try {
-    const response = await axiosInstance.get("/get-boards", {
+    const response = await axiosInstance.get(`/get-boards?userId=${userId}`, {
       validateStatus: () => true,
     });
     return response.data;

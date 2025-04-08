@@ -2,7 +2,7 @@ const Board = require("../models/board");
 
 //create new board
 exports.createBoard = async (req, res) => {
-  const { title } = req.body;
+  const { title, userId } = req.body;
 
   try {
     const boardDoc = await Board.findOne({ where: { title } });
@@ -16,6 +16,7 @@ exports.createBoard = async (req, res) => {
 
     await Board.create({
       title,
+      userId,
     });
     return res.status(201).json({
       message: "Board created successfully",
@@ -31,8 +32,20 @@ exports.createBoard = async (req, res) => {
 
 //get all boards
 exports.getAllBoards = async (req, res) => {
+  const { userId } = req.query;
+
   try {
-    const boards = await Board.findAll({ order: [["createdAt", "DESC"]] });
+    if (!userId) {
+      return res.status(400).json({
+        message: "User ID is required",
+        isSuccess: false,
+      });
+    }
+
+    const boards = await Board.findAll({
+      where: { userId },
+      order: [["createdAt", "DESC"]],
+    });
     return res.status(200).json({
       message: "Boards fetched successfully",
       boards,

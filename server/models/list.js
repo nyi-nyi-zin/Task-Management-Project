@@ -15,6 +15,10 @@ const List = sequelize.define("list", {
     allowNull: false,
     unique: true,
   },
+  boardId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
 module.exports = List;

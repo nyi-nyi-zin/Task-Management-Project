@@ -18,6 +18,10 @@ const Board = sequelize.define("board", {
       notEmpty: true,
     },
   },
+  userId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
 module.exports = Board;

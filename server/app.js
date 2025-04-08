@@ -8,6 +8,7 @@ const cors = require("cors");
 const Board = require("./models/board");
 const List = require("./models/list");
 const Card = require("./models/card");
+const User = require("./models/user");
 
 const sequelize = require("./utils/database");
 
@@ -32,6 +33,10 @@ app.use(boardRoutes);
 app.use(listRoutes);
 
 // Associations
+
+User.hasMany(Board, { foreignKey: "userId", onDelete: "CASCADE" });
+Board.belongsTo(User, { foreignKey: "userId" });
+
 Board.hasMany(List, { foreignKey: "boardId", onDelete: "CASCADE" });
 List.belongsTo(Board, { foreignKey: "boardId" });
 

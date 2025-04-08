@@ -1,23 +1,59 @@
+const { where } = require("sequelize");
 const List = require("../models/list");
 
 // Create a new list
 exports.createList = async (req, res) => {
+  const { title, boardId } = req.body;
+  const { id } = req.params;
+
   try {
-    const newList = new List(req.body);
-    const savedList = await newList.save();
-    res.status(201).json(savedList);
+    const ListDoc = await List.findOne({ where: { title, boardId } });
+
+    if (ListDoc) {
+      return res.status(409).json({
+        message: "List already exists",
+        isSuccess: false,
+      });
+    }
+
+    const newList = await List.create({
+      title,
+      boardId,
+    });
+    return res.status(201).json({
+      message: "List created successfully",
+      isSuccess: true,
+      list: newList,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({
+      message: "Error creating List",
+      error: error,
+    });
   }
 };
 
 // Get all lists
 exports.getAllLists = async (req, res) => {
+  const { boardId } = req.params;
+
   try {
-    const lists = await List.find();
-    res.status(200).json(lists);
+    const lists = await List.findAll({
+      where: { boardId },
+      order: [["createdAt", "DESC"]],
+    });
+
+    res.status(200).json({
+      message: "Lists fetched successfully",
+      lists,
+      isSuccess: true,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Error fetching lists",
+      error: error,
+      isSuccess: false,
+    });
   }
 };
 
@@ -36,27 +72,46 @@ exports.getAllLists = async (req, res) => {
 
 // Update a list by ID
 exports.updateList = async (req, res) => {
+  const { title } = req.body;
+  const id = req.params.listId;
+
   try {
-    const updatedList = await List.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
-    if (!updatedList) {
-      return res.status(404).json({ message: "List not found" });
+    const list = await List.findOne({ where: { id } });
+
+    if (!list) {
+      return res
+        .status(404)
+        .json({ message: "List not found", isSuccess: false });
     }
-    res.status(200).json(updatedList);
+    await List.update({ title }, { where: { id } });
+
+    res.status(200).json({
+      message: "List updated successfully",
+      isSuccess: true,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message, isSuccess: false });
   }
 };
 
 // Delete a list by ID
 exports.deleteList = async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const deletedList = await List.findByIdAndDelete(req.params.id);
-    if (!deletedList) {
-      return res.status(404).json({ message: "List not found" });
+    const ListDoc = await List.findOne({ where: { id } });
+
+    if (!ListDoc) {
+      return res.status(404).json({
+        message: "List not found",
+        isSuccess: false,
+      });
     }
-    res.status(200).json({ message: "List deleted successfully" });
+    await List.destroy({ where: { id } });
+    return res.status(200).json({
+      message: "List deleted successfully",
+      isSuccess: true,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -64,12 +119,14 @@ exports.deleteList = async (req, res) => {
 
 // Fetch the title of an old list by ID
 exports.getOldListTitle = async (req, res) => {
+  const id = req.params.listId;
+
   try {
-    const list = await List.findById(req.params.id);
+    const list = await List.findByPk(id);
     if (!list) {
       return res.status(404).json({ message: "List not found" });
     }
-    res.status(200).json({ title: list.title });
+    res.status(200).json({ isSuccess: true, title: list.title });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

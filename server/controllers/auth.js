@@ -83,7 +83,7 @@ exports.loginUser = async (req, res) => {
 exports.checkCurrentUser = async (req, res) => {
   try {
     const userDoc = await User.findByPk(req.userId, {
-      attributes: ["email"],
+      attributes: ["id", "email"],
     });
 
     if (!userDoc) {
