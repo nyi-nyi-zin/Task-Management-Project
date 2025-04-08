@@ -16,10 +16,7 @@ const Nav = () => {
   };
 
   return (
-    <nav
-      className="flex items-center justify-between text-blue-600 py-8"
-      style={{ padding: "10px 323px" }}
-    >
+    <nav className="flex items-center justify-between text-blue-600  my-2 px-20 md:px-16 lg:px-40 xl:px-80">
       <Link className="font-bold text-4xl  " to={"/"}>
         Miracle
       </Link>

@@ -94,7 +94,9 @@ function Index() {
 
   return (
     <>
-      <p className="text-blue-600 text-4xl font-bold">Your Boards</p>
+      <p className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
+        Your Boards
+      </p>
 
       <section className="flex flex-col items-center justify-center gap-3 w-[100%] ">
         <div className="flex justify-end ">

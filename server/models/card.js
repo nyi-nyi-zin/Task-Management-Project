@@ -19,6 +19,10 @@ const Card = sequelize.define("card", {
     type: Sequelize.STRING,
     allowNull: true,
   },
+  listId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
 module.exports = Card;

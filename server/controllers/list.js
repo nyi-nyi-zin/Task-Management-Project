@@ -1,10 +1,8 @@
-const { where } = require("sequelize");
 const List = require("../models/list");
 
 // Create a new list
 exports.createList = async (req, res) => {
   const { title, boardId } = req.body;
-  const { id } = req.params;
 
   try {
     const ListDoc = await List.findOne({ where: { title, boardId } });
@@ -56,19 +54,6 @@ exports.getAllLists = async (req, res) => {
     });
   }
 };
-
-// // Get a single list by ID
-// exports.getListById = async (req, res) => {
-//     try {
-//         const list = await List.findById(req.params.id);
-//         if (!list) {
-//             return res.status(404).json({ message: 'List not found' });
-//         }
-//         res.status(200).json(list);
-//     } catch (error) {
-//         res.status(500).json({ message: error.message });
-//     }
-// };
 
 // Update a list by ID
 exports.updateList = async (req, res) => {
@@ -124,7 +109,9 @@ exports.getOldListTitle = async (req, res) => {
   try {
     const list = await List.findByPk(id);
     if (!list) {
-      return res.status(404).json({ message: "List not found" });
+      return res
+        .status(404)
+        .json({ message: "List not found", isSuccess: false });
     }
     res.status(200).json({ isSuccess: true, title: list.title });
   } catch (error) {

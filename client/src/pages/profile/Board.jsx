@@ -3,14 +3,11 @@ import {
   Card,
   CardContent,
   Typography,
-  Dialog,
-  DialogTitle,
-  DialogActions,
   Button,
   TextField,
-  Stack,
   Paper,
 } from "@mui/material";
+import Checkbox from "@mui/material/Checkbox";
 import CustomizedMenus from "../../components/Menu";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
@@ -24,6 +21,14 @@ import {
   deleteList,
 } from "../../apicalls/list";
 import { InputAdornment, IconButton } from "@mui/material";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import {
+  createCard,
+  fetchAllCards,
+  fetchOldCardsTitle,
+  updateCard,
+} from "../../apicalls/card";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -40,10 +45,6 @@ export default function Board() {
   const params = useParams();
   const id = params.boardId;
 
-  const [cards, setCards] = useState([
-    { id: 1, title: "NAT (Def)", content: "Definition of NAT" },
-    { id: 2, title: "POP3 (Def)", content: "Definition of POP3" },
-  ]);
   const [boardDetails, setBoardDetails] = useState({});
   const [lists, setLists] = useState([]);
   const [newListTitle, setNewListTitle] = useState("");
@@ -52,11 +53,36 @@ export default function Board() {
   const [editMode, setEditMode] = useState(false);
   const [editingListId, setEditingListId] = useState(null);
 
+  const [cardsByList, setCardsByList] = useState({});
+  const [newCardTitles, setNewCardTitles] = useState({});
+  const [showAddCardForList, setShowAddCardForList] = useState({});
+  const [cardEditMode, setCardEditMode] = useState(false);
+  const [editingCardId, setEditingCardId] = useState(null);
+  const [editingCardTitle, setEditingCardTitle] = useState("");
+
+  //get all cards
+  const getAllCards = async (listId) => {
+    try {
+      const response = await fetchAllCards(listId);
+      if (response.isSuccess) {
+        const cards = response.cards || [];
+        console.log("Cards fetched successfully:", cards);
+        setCardsByList((prev) => ({
+          ...prev,
+          [listId]: cards,
+        }));
+      } else {
+        console.error("Error fetching cards:", response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching cards:", error);
+    }
+  };
+
   const fetchBoardDetails = async (id) => {
     try {
       const response = await getSingleBoard(id);
       if (response.isSuccess) {
-        console.log(response.board);
         setBoardDetails(response.board);
       } else {
         console.error("Error fetching board details:", response.message);
@@ -101,6 +127,46 @@ export default function Board() {
     }
   };
 
+  //create card
+  const handleCreateCard = async (listId) => {
+    const title = newCardTitles[listId];
+    if (!title) return;
+
+    const payload = {
+      title,
+      listId,
+    };
+    try {
+      const response = await createCard(payload);
+      if (response.isSuccess) {
+        setNewCardTitles((prev) => ({ ...prev, [listId]: "" }));
+        setShowAddCardForList((prev) => ({ ...prev, [listId]: false }));
+        await getAllCards(listId);
+        await fetchAllLists(id);
+      } else {
+        console.error("Error creating card:", response.message);
+      }
+    } catch (error) {
+      console.error("Error creating card:", error);
+    }
+  };
+
+  //handle update card
+  const handleUpdateCard = async (cardId, listId) => {
+    const payload = {
+      cardId,
+      title: editingCardTitle,
+    };
+    const response = await updateCard(payload);
+    if (response.isSuccess) {
+      await getAllCards(listId);
+      setCardEditMode(false);
+      setEditingCardId(null);
+      setEditingCardTitle("");
+    }
+  };
+
+  //create list
   const handleCreateList = async () => {
     const payload = {
       title: newListTitle,
@@ -180,97 +246,215 @@ export default function Board() {
     }
   }, []);
 
+  useEffect(() => {
+    if (allLists.length > 0) {
+      allLists.forEach((list) => {
+        getAllCards(list.id);
+      });
+    }
+  }, [allLists]);
+
+  console.log(cardsByList);
+
   return (
     <>
       <section style={{ minHeight: "100vh" }} className="bg-gray-100">
-        <div className="flex items-center justify-center text-blue-700 text-4xl ">
+        <div className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
           Board's Name "{boardDetails.title}"
         </div>
 
         <Box
           sx={{
             display: "flex",
-            width: "100%",
+            width: "100vw",
             whiteSpace: "nowrap",
             padding: 2,
             gap: 3,
           }}
-          style={{ width: "100%" }}
+          style={{ width: "100vw" }}
         >
           {allLists &&
             allLists.map((list) => (
-              <>
-                <div key={list.id}>
-                  <Item className="min-w-[300px] max-w-[200px]">
-                    <Box
+              <div key={list.id}>
+                {console.log(
+                  "Rendering cards for list",
+                  list.id,
+                  cardsByList[list.id]
+                )}
+                <Item className="min-w-[350px] max-w-[350px]">
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      mb: 1,
+                      gap: 0,
+                    }}
+                  >
+                    <Typography
+                      variant="h6"
                       sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        mb: 1,
-                        gap: 0,
+                        wordWrap: "break-word",
+                        whiteSpace: "normal",
+                        overflowWrap: "break-word",
+                        wordBreak: "break-word",
+                        maxWidth: "500px",
+                        flex: 1,
+                        alignSelf: "flex-start",
                       }}
                     >
-                      <Typography
-                        variant="h6"
-                        sx={{
-                          wordWrap: "break-word",
-                          whiteSpace: "normal",
-                          overflowWrap: "break-word",
-                          wordBreak: "break-word",
-                          maxWidth: "500px",
-                          flex: 1,
-                        }}
-                      >
-                        {editMode && editingListId === list.id ? (
-                          <Box sx={{ display: "flex" }}>
-                            <TextField
-                              fullWidth
-                              size="small"
-                              value={newListTitle}
-                              onChange={(e) => setNewListTitle(e.target.value)}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment
-                                    position="end"
-                                    sx={{ marginRight: "-14px", padding: 0 }}
+                      {editMode && editingListId === list.id ? (
+                        <Box sx={{ display: "flex" }}>
+                          <TextField
+                            fullWidth
+                            size="small"
+                            value={newListTitle}
+                            onChange={(e) => setNewListTitle(e.target.value)}
+                            InputProps={{
+                              endAdornment: (
+                                <InputAdornment
+                                  position="end"
+                                  sx={{ marginRight: "-14px", padding: 0 }}
+                                >
+                                  <Button
+                                    className="text-nowrap ml-100"
+                                    variant="contained"
+                                    size="medium"
+                                    onClick={async () => {
+                                      await handleUpdateList(
+                                        list.id,
+                                        newListTitle
+                                      );
+                                      setNewListTitle("");
+                                      setEditMode(false);
+                                    }}
                                   >
-                                    <Button
-                                      className="text-nowrap ml-100"
-                                      variant="contained"
-                                      size="medium"
-                                      onClick={async () => {
-                                        await handleUpdateList(
-                                          list.id,
-                                          newListTitle
-                                        );
-                                        setNewListTitle("");
-                                        setEditMode(false);
-                                      }}
-                                    >
-                                      OK
-                                    </Button>
-                                  </InputAdornment>
-                                ),
-                              }}
+                                    OK
+                                  </Button>
+                                </InputAdornment>
+                              ),
+                            }}
+                          />
+                        </Box>
+                      ) : (
+                        <>
+                          <div className="flex justify-between items-center ">
+                            <Typography variant="h6" className="pl-3">
+                              {list.title}
+                            </Typography>
+                            <CustomizedMenus
+                              handleEditMode={handleEditMode}
+                              listId={list.id}
+                              fetchOldListTitle={fetchOldListTitle}
+                              handleDeleteList={handleDeleteList}
                             />
+                          </div>
+                          {cardsByList[list.id] &&
+                          cardsByList[list.id].length > 0 ? (
+                            cardsByList[list.id].map((card) => (
+                              <Card key={card.id} className="mb-2">
+                                <CardContent className="bg-gray-200 flex justify-between items-center">
+                                  {cardEditMode && editingCardId === card.id ? (
+                                    <>
+                                      <Box className="flex w-full gap-2">
+                                        <TextField
+                                          fullWidth
+                                          size="small"
+                                          className="flex-1"
+                                          placeholder="Enter title"
+                                          value={editingCardTitle}
+                                          onChange={(e) =>
+                                            setEditingCardTitle(e.target.value)
+                                          }
+                                        />
+                                        <Button
+                                          variant="contained"
+                                          style={{ height: "40px" }}
+                                          onClick={() => {
+                                            setCardEditMode(false);
+                                          }}
+                                        >
+                                          OK
+                                        </Button>
+                                      </Box>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <Box className="flex items-center">
+                                        <Checkbox />
+                                        <Typography
+                                          variant="body2"
+                                          className="text-gray-700"
+                                        >
+                                          {card.title}
+                                        </Typography>
+                                      </Box>
+                                      <Box>
+                                        <DeleteOutlineIcon className="cursor-pointer" />
+                                        <EditOutlinedIcon
+                                          className="cursor-pointer ml-1"
+                                          onClick={() => {
+                                            setCardEditMode(true);
+                                            setEditingCardId(card.id);
+                                          }}
+                                        />
+                                      </Box>
+                                    </>
+                                  )}
+                                </CardContent>
+                              </Card>
+                            ))
+                          ) : (
+                            <Typography
+                              variant="body2"
+                              className="text-gray-500 p-2"
+                            >
+                              No cards in this list
+                            </Typography>
+                          )}
+                          <Box>
+                            {showAddCardForList[list.id] ? (
+                              <>
+                                <TextField
+                                  sx={{ width: "100%" }}
+                                  placeholder="Card Name"
+                                  value={newCardTitles[list.id] || ""}
+                                  onChange={(e) =>
+                                    setNewCardTitles((prev) => ({
+                                      ...prev,
+                                      [list.id]: e.target.value,
+                                    }))
+                                  }
+                                />
+                                <Button
+                                  variant="contained"
+                                  onClick={() => handleCreateCard(list.id)}
+                                  style={{ marginTop: "5px" }}
+                                >
+                                  OK
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                variant="contained"
+                                className="mt-2"
+                                onClick={() =>
+                                  setShowAddCardForList((prev) => ({
+                                    ...prev,
+                                    [list.id]: true,
+                                  }))
+                                }
+                              >
+                                Add Card
+                              </Button>
+                            )}
                           </Box>
-                        ) : (
-                          <> {list.title}</>
-                        )}
-                      </Typography>
-                      <Box sx={{ flexShrink: 0 }}>
-                        <CustomizedMenus
-                          handleEditMode={handleEditMode}
-                          listId={list.id}
-                          fetchOldListTitle={fetchOldListTitle}
-                          handleDeleteList={handleDeleteList}
-                        />
-                      </Box>
-                    </Box>
-                  </Item>
-                </div>
-              </>
+                        </>
+                      )}
+                    </Typography>
+                  </Box>
+                </Item>
+              </div>
             ))}
           <div className="flex justify-center items-center">
             {showAddList ? (
