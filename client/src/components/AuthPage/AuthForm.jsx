@@ -45,12 +45,11 @@ const AuthForm = ({ isLoginPage }) => {
   };
 
   return (
-    <section className=" w-full flex mt-40 justify-center">
-      <div className=" w-[250px]">
-        <h1 className="text-3xl font-bold mb-4 text-blue-600">
-          {isLoginPage ? "LOGIN" : "REGISTER"}
-        </h1>
-
+    <section className="w-full flex justify-center items-center h-screen flex-col">
+      <h1 className="text-3xl font-bold mb-4 text-blue-600  w-[100vw] text-center ">
+        {isLoginPage ? "LOGIN" : "REGISTER"}
+      </h1>
+      <div className=" w-[250px] mb-45 mr-29">
         <Box
           component="form"
           onSubmit={handleOnSubmit}
@@ -65,17 +64,19 @@ const AuthForm = ({ isLoginPage }) => {
             name="email"
             type="email"
             required
-            className="w-100 p-23"
+            className="w-92 p-23"
             margin="normal"
           />
+
           <TextField
             label="Password"
             name="password"
             type="password"
             required
-            className="w-100"
+            className="w-92"
             margin="normal"
           />
+
           <Button type="submit" variant="contained" color="primary">
             {isLoginPage ? "Login" : "Register"}
           </Button>

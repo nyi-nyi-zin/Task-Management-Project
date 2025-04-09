@@ -94,114 +94,126 @@ function Index() {
 
   return (
     <>
-      <p className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
-        Your Boards
-      </p>
+      {user ? (
+        <>
+          <p className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
+            Your Boards
+          </p>
 
-      <section className="flex flex-col items-center justify-center gap-3 w-[100%] ">
-        <div className="flex justify-end ">
-          <Button
-            onClick={() => {
-              setShowForm(true);
-            }}
-            size="large"
-            variant="contained"
-          >
-            Create New Board
-          </Button>
-        </div>
-        {showForm ? (
-          <Box
-            className="flex justify-end"
-            component="form"
-            sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
-            noValidate
-            autoComplete="off"
-          >
-            <TextField
-              inputRef={textFieldRef}
-              id="outlined-basic"
-              label="Board Name"
-              variant="outlined"
-              value={boardName}
-              onChange={(e) => setBoardName(e.target.value)}
-            />
-            <Button
-              size="small"
-              variant="outlined"
-              sx={{ width: "5ch !important", m: 1 }}
-              onClick={() => {
-                setShowForm(false);
-                handleNewBoard();
-              }}
-            >
-              OK
-            </Button>
-          </Box>
-        ) : (
-          <></>
-        )}
-        {board.map((item) => (
-          <Card
-            sx={{ minWidth: 275 }}
-            className="mt-4 cursor-pointer"
-            key={item.id}
-            classes={{ root: "w-[80%] bg-amber-200" }}
-            onClick={() => {
-              navigate(`/board/${item.id}`);
-            }}
-          >
-            <CardContent>
-              {editingBoardId === item.id ? (
-                <div className="flex gap-1 ">
-                  <TextField
-                    fullWidth
-                    value={editingTitle}
-                    onChange={(e) => {
-                      setEditingTitle(e.target.value);
-                    }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
+          <section className="flex flex-col items-center justify-center gap-3 w-[100%] ">
+            <div className="flex justify-end ">
+              <Button
+                onClick={() => {
+                  setShowForm(true);
+                }}
+                size="large"
+                variant="contained"
+              >
+                Create New Board
+              </Button>
+            </div>
+            {showForm ? (
+              <Box
+                className="flex justify-end"
+                component="form"
+                sx={{ "& > :not(style)": { m: 1, width: "25ch" } }}
+                noValidate
+                autoComplete="off"
+              >
+                <TextField
+                  inputRef={textFieldRef}
+                  id="outlined-basic"
+                  label="Board Name"
+                  variant="outlined"
+                  value={boardName}
+                  onChange={(e) => setBoardName(e.target.value)}
+                />
+                <Button
+                  size="small"
+                  variant="outlined"
+                  sx={{ width: "5ch !important", m: 1 }}
+                  onClick={() => {
+                    setShowForm(false);
+                    handleNewBoard();
+                  }}
+                >
+                  OK
+                </Button>
+              </Box>
+            ) : (
+              <></>
+            )}
+            {board.map((item) => (
+              <Card
+                sx={{ minWidth: 275 }}
+                className="mt-4 cursor-pointer"
+                key={item.id}
+                classes={{ root: "w-[80%] bg-amber-200" }}
+                onClick={() => {
+                  navigate(`/board/${item.id}`);
+                }}
+              >
+                <CardContent>
+                  {editingBoardId === item.id ? (
+                    <div className="flex gap-1 ">
+                      <TextField
+                        fullWidth
+                        value={editingTitle}
+                        onChange={(e) => {
+                          setEditingTitle(e.target.value);
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                      <Button
+                        size="small"
+                        variant="contained"
+                        onClick={(e) => {
+                          handleUpdateBoard(item.id, editingTitle);
+                          e.stopPropagation();
+                        }}
+                      >
+                        OK
+                      </Button>
+                    </div>
+                  ) : (
+                    <Typography variant="body2">{item.title}</Typography>
+                  )}
+                </CardContent>
+                <CardActions>
                   <Button
                     size="small"
-                    variant="contained"
                     onClick={(e) => {
-                      handleUpdateBoard(item.id, editingTitle);
+                      setEditingBoardId(item.id);
+                      setEditingTitle(item.title);
                       e.stopPropagation();
                     }}
                   >
-                    OK
+                    Edit
                   </Button>
-                </div>
-              ) : (
-                <Typography variant="body2">{item.title}</Typography>
-              )}
-            </CardContent>
-            <CardActions>
-              <Button
-                size="small"
-                onClick={(e) => {
-                  setEditingBoardId(item.id);
-                  setEditingTitle(item.title);
-                  e.stopPropagation();
-                }}
-              >
-                Edit
-              </Button>
-              <Button
-                size="small"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteBoard(item.id);
-                }}
-              >
-                Delete
-              </Button>
-            </CardActions>
-          </Card>
-        ))}
-        <div className="mt-50"></div>
-      </section>
+                  <Button
+                    size="small"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteBoard(item.id);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </CardActions>
+              </Card>
+            ))}
+            <div className="mt-50"></div>
+          </section>
+        </>
+      ) : (
+        <>
+          <section className="flex justify-center items-center h-[87vh]">
+            <p className=" text-blue-600 text-4xl mb-10 text-center">
+              Login or Register to Start Manage Your Tasks
+            </p>
+          </section>
+        </>
+      )}
     </>
   );
 }

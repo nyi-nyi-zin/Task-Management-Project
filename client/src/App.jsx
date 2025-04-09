@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./layouts/Main";
-import Index from "./pages/Index";
+
 import Register from "./pages/Auth/Register";
 import Login from "./pages/Auth/Login";
 import AuthProvider from "./providers/AuthProvider";
@@ -17,7 +17,7 @@ function App() {
           index: true,
           element: (
             <AuthProvider>
-              <Index />
+              <Profile />
             </AuthProvider>
           ),
         },

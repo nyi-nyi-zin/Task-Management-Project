@@ -5,7 +5,10 @@ exports.createList = async (req, res) => {
   const { title, boardId } = req.body;
 
   try {
-    const ListDoc = await List.findOne({ where: { title, boardId } });
+    const ListDoc = await List.findOne({
+      where: { title, boardId },
+      order: [["createdAt", "ASC"]],
+    });
 
     if (ListDoc) {
       return res.status(409).json({
@@ -38,7 +41,7 @@ exports.getAllLists = async (req, res) => {
   try {
     const lists = await List.findAll({
       where: { boardId },
-      order: [["createdAt", "DESC"]],
+      order: [["createdAt", "ASC"]],
     });
 
     res.status(200).json({

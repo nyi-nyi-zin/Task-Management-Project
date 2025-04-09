@@ -248,11 +248,9 @@ export default function Board() {
         });
       } else {
         console.error("Error deleting card:", response.message);
-        alert("Failed to delete card from server");
       }
     } catch (error) {
       console.error("Error deleting card:", error);
-      alert("An error occurred while deleting the card");
     }
   };
 
