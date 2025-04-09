@@ -8,60 +8,87 @@ import {
 } from "../apicalls/card";
 
 export const useCard = () => {
-  const [cardsByList, setCardsByList] = useState({});
-  const [newCardTitles, setNewCardTitles] = useState({});
   const [editingCardTitle, setEditingCardTitle] = useState("");
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchCards = async (listId) => {
-    const response = await fetchAllCards(listId);
-    if (response.isSuccess) {
-      setCardsByList((prev) => ({
-        ...prev,
-        [listId]: response.cards || [],
-      }));
+    try {
+      setLoading(true);
+      const response = await fetchAllCards(listId);
+      if (response.isSuccess) {
+        return response.cards;
+      } else {
+        setError(response.message);
+        return [];
+      }
+    } catch (err) {
+      setError(err.message || "Failed to fetch cards.");
+      return [];
+    } finally {
+      setLoading(false);
     }
   };
 
-  const create = async (listId) => {
-    const title = newCardTitles[listId];
+  const create = async (listId, title) => {
     if (!title) return;
-
-    const response = await createCard({ listId, title });
-    if (response.isSuccess) {
-      setNewCardTitles((prev) => ({ ...prev, [listId]: "" }));
-      fetchCards(listId);
+    try {
+      const response = await createCard({ listId, title });
+      if (response.isSuccess) {
+        await fetchCards(listId);
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError(err.message || "Failed to create card.");
     }
   };
 
   const update = async (cardId, listId) => {
-    const response = await updateCard({ cardId, title: editingCardTitle });
-    if (response.isSuccess) {
-      fetchCards(listId);
+    try {
+      const response = await updateCard({ cardId, title: editingCardTitle });
+      if (response.isSuccess) {
+        await fetchCards(listId);
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError(err.message || "Failed to update card.");
     }
   };
 
   const remove = async (cardId, listId) => {
-    const response = await deleteCard(cardId);
-    if (response.isSuccess) {
-      setCardsByList((prev) => {
-        const updated = { ...prev };
-        updated[listId] = updated[listId].filter((c) => c.id !== cardId);
-        return updated;
-      });
+    try {
+      const response = await deleteCard(cardId);
+      if (response.isSuccess) {
+        return await fetchCards(listId);
+      } else {
+        setError(response.message);
+        return [];
+      }
+    } catch (err) {
+      setError(err.message || "Failed to delete card.");
+      return [];
     }
   };
 
   const getOldTitle = async (cardId) => {
-    const response = await fetchOldCardsTitle(cardId);
-    if (response.isSuccess) {
-      setEditingCardTitle(response.cardTitle);
+    try {
+      const response = await fetchOldCardsTitle(cardId);
+      if (response.isSuccess) {
+        setEditingCardTitle(response.cardTitle);
+        return response.cardTitle;
+      } else {
+        setError(response.message);
+        return "";
+      }
+    } catch (err) {
+      setError(err.message || "Failed to fetch old card title.");
+      return "";
     }
   };
 
   return {
-    cardsByList,
-    newCardTitles,
-    setNewCardTitles,
     editingCardTitle,
     setEditingCardTitle,
     fetchCards,
@@ -69,5 +96,7 @@ export const useCard = () => {
     update,
     remove,
     getOldTitle,
+    error,
+    loading,
   };
 };

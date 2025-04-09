@@ -13,13 +13,6 @@ import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { getSingleBoard } from "../../apicalls/board";
 import { useParams } from "react-router-dom";
-import {
-  createNewList,
-  getAllLists,
-  getOldListTitle,
-  updateList,
-  deleteList,
-} from "../../apicalls/list";
 import { InputAdornment } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -30,6 +23,8 @@ import {
   updateCard,
   deleteCard,
 } from "../../apicalls/card";
+import { useList } from "../../hooks/useList";
+import { useCard } from "../../hooks/useCard";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: "#fff",
@@ -46,38 +41,47 @@ export default function Board() {
   const params = useParams();
   const id = params.boardId;
 
+  const {
+    lists: allLists,
+    loading,
+    error,
+    addList,
+    editList,
+    removeList,
+    getListTitle,
+    editingListTitle,
+    setEditingListTitle,
+    fetchLists,
+  } = useList(id);
+
+  const {
+    fetchCards,
+    create,
+    update,
+    remove,
+    editingCardTitle,
+    setEditingCardTitle,
+  } = useCard();
+
   const [boardDetails, setBoardDetails] = useState({});
-  const [lists, setLists] = useState([]);
   const [newListTitle, setNewListTitle] = useState("");
   const [showAddList, setShowAddList] = useState(false);
-  const [allLists, setAllLists] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [editingListId, setEditingListId] = useState(null);
 
-  const [cardsByList, setCardsByList] = useState({});
-  const [newCardTitles, setNewCardTitles] = useState({});
   const [showAddCardForList, setShowAddCardForList] = useState({});
   const [cardEditMode, setCardEditMode] = useState(false);
   const [editingCardId, setEditingCardId] = useState(null);
-  const [editingCardTitle, setEditingCardTitle] = useState("");
+  const [newCardTitles, setNewCardTitles] = useState({});
+  const [cardsByList, setCardsByList] = useState({});
 
   //get all cards
   const getAllCards = async (listId) => {
-    try {
-      const response = await fetchAllCards(listId);
-      if (response.isSuccess) {
-        const cards = response.cards || [];
-        console.log("Cards fetched successfully:", cards);
-        setCardsByList((prev) => ({
-          ...prev,
-          [listId]: cards,
-        }));
-      } else {
-        console.error("Error fetching cards:", response.message);
-      }
-    } catch (error) {
-      console.error("Error fetching cards:", error);
-    }
+    const cards = await fetchCards(listId);
+    setCardsByList((prev) => ({
+      ...prev,
+      [listId]: cards,
+    }));
   };
 
   const fetchBoardDetails = async (id) => {
@@ -94,100 +98,46 @@ export default function Board() {
   };
 
   const handleUpdateList = async (listId, title) => {
-    console.log("handleUpdateList called with:", listId, title);
+    await editList(listId, title);
+    setNewListTitle("");
+    setEditMode(false);
+    setEditingListId(null);
+  };
 
-    const payload = {
-      listId: listId,
-      title: title,
-    };
-    console.log("Prepared payload:", payload);
+  const handleDeleteList = async (listId) => {
+    await removeList(listId);
+  };
 
-    try {
-      console.log("Calling updateList API...");
-      const response = await updateList(payload);
-      console.log("API response:", response);
-
-      if (response.isSuccess) {
-        console.log("Update was successful, updating UI...");
-        setAllLists((prevLists) =>
-          prevLists.map((list) =>
-            list.id === listId ? { ...list, title: title } : list
-          )
-        );
-        setNewListTitle("");
-        setEditMode(false);
-        setEditingListId(null);
-        console.log("UI updated, fetching all lists...");
-        fetchAllLists(id);
-        console.log("All operations completed successfully");
-      } else {
-        console.error("Error updating list:", response.message);
-      }
-    } catch (error) {
-      console.error("Error caught in handleUpdateList:", error);
-    }
+  const handleEditMode = async (listId) => {
+    const title = await getListTitle(listId);
+    setNewListTitle(title);
+    setEditingListId(listId);
+    setEditMode(true);
   };
 
   //create card
   const handleCreateCard = async (listId) => {
-    const title = newCardTitles[listId];
-    if (!title) return;
-
-    const payload = {
-      title,
-      listId,
-    };
-    try {
-      const response = await createCard(payload);
-      if (response.isSuccess) {
-        setNewCardTitles((prev) => ({ ...prev, [listId]: "" }));
-        setShowAddCardForList((prev) => ({ ...prev, [listId]: false }));
-        await getAllCards(listId);
-        await fetchAllLists(id);
-      } else {
-        console.error("Error creating card:", response.message);
-      }
-    } catch (error) {
-      console.error("Error creating card:", error);
-    }
+    await create(listId, newCardTitles[listId]);
+    setNewCardTitles((prev) => ({ ...prev, [listId]: "" }));
+    await getAllCards(listId);
+    await fetchAllLists(id);
   };
 
   //handle update card
   const handleUpdateCard = async (cardId, listId) => {
-    const payload = {
-      cardId,
-      title: editingCardTitle,
-    };
-    const response = await updateCard(payload);
-    if (response.isSuccess) {
-      await getAllCards(listId);
+    if (editingCardTitle) {
+      await update(cardId, listId);
       setCardEditMode(false);
       setEditingCardId(null);
-      setEditingCardTitle("");
+      await getAllCards(listId);
     }
   };
 
   //create list
   const handleCreateList = async () => {
-    const payload = {
-      title: newListTitle,
-      boardId: id,
-    };
-    try {
-      const response = await createNewList(payload);
-      if (response.isSuccess) {
-        const newList = {
-          id: response.list.id,
-          title: newListTitle,
-        };
-        setLists([...lists, newList]);
-        setNewListTitle("");
-        setShowAddList(false);
-        fetchAllLists(id);
-      }
-    } catch (error) {
-      console.error("Error creating list:", error);
-    }
+    await addList(newListTitle);
+    setNewListTitle("");
+    setShowAddList(false);
   };
 
   //handle fetch old card title
@@ -234,46 +184,14 @@ export default function Board() {
   //handle delete card
   const handleDeleteCard = async (cardId, listId) => {
     try {
-      const response = await deleteCard(cardId);
-
-      if (response.isSuccess) {
-        setCardsByList((prev) => {
-          const updated = { ...prev };
-          if (updated[listId]) {
-            updated[listId] = updated[listId].filter(
-              (card) => card.id !== cardId
-            );
-          }
-          return updated;
-        });
-      } else {
-        console.error("Error deleting card:", response.message);
-      }
+      const updatedCards = await remove(cardId, listId);
+      setCardsByList((prev) => ({
+        ...prev,
+        [listId]: updatedCards,
+      }));
     } catch (error) {
       console.error("Error deleting card:", error);
     }
-  };
-
-  //handle delete list
-  const handleDeleteList = async (listId) => {
-    try {
-      const response = await deleteList(listId);
-      if (response.isSuccess) {
-        setAllLists((prevLists) =>
-          prevLists.filter((list) => list.id !== listId)
-        );
-      } else {
-        console.error("Error deleting list:", response.message);
-      }
-    } catch (error) {
-      console.error("Error deleting list:", error);
-    }
-  };
-
-  const handleEditMode = async (listId) => {
-    await fetchOldListTitle(listId);
-    setEditingListId(listId);
-    setEditMode(true);
   };
 
   useEffect(() => {
@@ -281,7 +199,7 @@ export default function Board() {
       fetchBoardDetails(id);
       fetchAllLists(id);
     }
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     if (allLists.length > 0) {

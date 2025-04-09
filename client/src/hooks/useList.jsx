@@ -13,7 +13,7 @@ export const useList = (boardId) => {
   const [error, setError] = useState(null);
   const [editingListTitle, setEditingListTitle] = useState("");
 
-  const fetchLists = async (boardId) => {
+  const fetchLists = async () => {
     try {
       setLoading(true);
       const response = await getAllLists(boardId);
@@ -28,6 +28,12 @@ export const useList = (boardId) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (boardId) {
+      fetchLists();
+    }
+  }, [boardId]);
 
   const addList = async (title) => {
     try {
@@ -83,12 +89,6 @@ export const useList = (boardId) => {
       return "";
     }
   };
-
-  useEffect(() => {
-    if (boardId) {
-      fetchLists();
-    }
-  }, [boardId]);
 
   return {
     lists,
