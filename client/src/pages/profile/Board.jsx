@@ -376,7 +376,10 @@ export default function Board() {
                       ) : (
                         <>
                           <div className="flex justify-between items-center ">
-                            <Typography variant="h6" className="pl-3">
+                            <Typography
+                              variant="h6"
+                              className="pl-3 text-black"
+                            >
                               {list.title}
                             </Typography>
                             <CustomizedMenus
@@ -386,77 +389,96 @@ export default function Board() {
                               handleDeleteList={handleDeleteList}
                             />
                           </div>
-                          {cardsByList[list.id] &&
-                          cardsByList[list.id].length > 0 ? (
-                            cardsByList[list.id].map((card) => (
-                              <Card key={card.id} className="mb-2">
-                                <CardContent className="bg-gray-200 flex justify-between items-center">
-                                  {cardEditMode && editingCardId === card.id ? (
-                                    <>
-                                      <Box className="flex w-full gap-2">
-                                        <TextField
-                                          fullWidth
-                                          size="small"
-                                          className="flex-1"
-                                          placeholder="Enter title"
-                                          value={editingCardTitle}
-                                          onChange={(e) =>
-                                            setEditingCardTitle(e.target.value)
-                                          }
-                                        />
-                                        <Button
-                                          variant="contained"
-                                          style={{ height: "40px" }}
-                                          onClick={() => {
-                                            setCardEditMode(false);
-                                            handleUpdateCard(card.id, list.id);
-                                          }}
-                                        >
-                                          OK
-                                        </Button>
-                                      </Box>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Box className="flex items-center">
-                                        <Checkbox />
-                                        <Typography
-                                          variant="body2"
-                                          className="text-gray-700"
-                                        >
-                                          {card.title}
-                                        </Typography>
-                                      </Box>
-                                      <Box>
-                                        <DeleteOutlineIcon
-                                          className="cursor-pointer"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleDeleteCard(card.id, list.id);
-                                          }}
-                                        />
-                                        <EditOutlinedIcon
-                                          className="cursor-pointer ml-1"
-                                          onClick={() => {
-                                            setCardEditMode(true);
-                                            setEditingCardId(card.id);
-                                            handleOldCardsTitle(card.id);
-                                          }}
-                                        />
-                                      </Box>
-                                    </>
-                                  )}
-                                </CardContent>
-                              </Card>
-                            ))
-                          ) : (
-                            <Typography
-                              variant="body2"
-                              className="text-gray-500 p-2"
-                            >
-                              No cards in this list
-                            </Typography>
-                          )}
+                          <Box
+                            sx={{
+                              maxHeight: 300,
+                              overflowY: "auto",
+                              marginTop: 1,
+                              marginBottom: 1,
+                            }}
+                          >
+                            {cardsByList[list.id] &&
+                            cardsByList[list.id].length > 0 ? (
+                              cardsByList[list.id].map((card) => (
+                                <Card key={card.id} className="mb-2 max-h-16 ">
+                                  <CardContent className="bg-gray-200 flex justify-between items-center">
+                                    {cardEditMode &&
+                                    editingCardId === card.id ? (
+                                      <>
+                                        <Box className="flex w-full gap-2">
+                                          <TextField
+                                            fullWidth
+                                            size="small"
+                                            className="flex-1"
+                                            placeholder="Enter title"
+                                            value={editingCardTitle}
+                                            onChange={(e) =>
+                                              setEditingCardTitle(
+                                                e.target.value
+                                              )
+                                            }
+                                          />
+                                          <Button
+                                            variant="contained"
+                                            style={{ height: "40px" }}
+                                            onClick={() => {
+                                              setCardEditMode(false);
+                                              handleUpdateCard(
+                                                card.id,
+                                                list.id
+                                              );
+                                            }}
+                                          >
+                                            OK
+                                          </Button>
+                                        </Box>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Box className="flex items-center">
+                                          <Checkbox />
+                                          <Typography
+                                            variant="body2"
+                                            className="text-gray-700"
+                                          >
+                                            {card.title}
+                                          </Typography>
+                                        </Box>
+                                        <Box>
+                                          <DeleteOutlineIcon
+                                            className="cursor-pointer"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleDeleteCard(
+                                                card.id,
+                                                list.id
+                                              );
+                                            }}
+                                          />
+                                          <EditOutlinedIcon
+                                            className="cursor-pointer ml-1"
+                                            onClick={() => {
+                                              setCardEditMode(true);
+                                              setEditingCardId(card.id);
+                                              handleOldCardsTitle(card.id);
+                                            }}
+                                          />
+                                        </Box>
+                                      </>
+                                    )}
+                                  </CardContent>
+                                </Card>
+                              ))
+                            ) : (
+                              <Typography
+                                variant="body2"
+                                className="text-gray-500 p-2"
+                              >
+                                No cards in this list
+                              </Typography>
+                            )}
+                          </Box>
+
                           <Box>
                             {showAddCardForList[list.id] ? (
                               <>
@@ -470,14 +492,31 @@ export default function Board() {
                                       [list.id]: e.target.value,
                                     }))
                                   }
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment
+                                        position="end"
+                                        sx={{
+                                          marginRight: "-14px",
+                                          padding: 0,
+                                        }}
+                                      >
+                                        <Button
+                                          variant="contained"
+                                          onClick={() =>
+                                            handleCreateCard(list.id)
+                                          }
+                                          sx={{
+                                            height: "52px",
+                                            minWidth: "40px",
+                                          }}
+                                        >
+                                          OK
+                                        </Button>
+                                      </InputAdornment>
+                                    ),
+                                  }}
                                 />
-                                <Button
-                                  variant="contained"
-                                  onClick={() => handleCreateCard(list.id)}
-                                  style={{ marginTop: "5px" }}
-                                >
-                                  OK
-                                </Button>
                               </>
                             ) : (
                               <Button

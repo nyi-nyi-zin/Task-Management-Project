@@ -5,18 +5,6 @@ exports.createList = async (req, res) => {
   const { title, boardId } = req.body;
 
   try {
-    const ListDoc = await List.findOne({
-      where: { title, boardId },
-      order: [["createdAt", "ASC"]],
-    });
-
-    if (ListDoc) {
-      return res.status(409).json({
-        message: "List already exists",
-        isSuccess: false,
-      });
-    }
-
     const newList = await List.create({
       title,
       boardId,

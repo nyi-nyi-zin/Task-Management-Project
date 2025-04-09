@@ -13,7 +13,6 @@ const List = sequelize.define("list", {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
   },
   boardId: {
     type: Sequelize.INTEGER,

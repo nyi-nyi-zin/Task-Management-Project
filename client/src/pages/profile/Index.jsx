@@ -93,7 +93,7 @@ function Index() {
   };
 
   return (
-    <>
+    <section className="h-screen overflow-auto">
       {user ? (
         <>
           <p className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
@@ -214,7 +214,7 @@ function Index() {
           </section>
         </>
       )}
-    </>
+    </section>
   );
 }
 

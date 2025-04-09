@@ -13,10 +13,6 @@ const Board = sequelize.define("board", {
   title: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true,
-    validate: {
-      notEmpty: true,
-    },
   },
   userId: {
     type: Sequelize.INTEGER,

@@ -5,15 +5,6 @@ exports.createBoard = async (req, res) => {
   const { title, userId } = req.body;
 
   try {
-    const boardDoc = await Board.findOne({ where: { title } });
-
-    if (boardDoc) {
-      return res.status(409).json({
-        message: "Board already exists",
-        isSuccess: false,
-      });
-    }
-
     await Board.create({
       title,
       userId,
