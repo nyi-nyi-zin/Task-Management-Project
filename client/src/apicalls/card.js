@@ -30,7 +30,7 @@ export const fetchAllCards = async (listId) => {
 //fetch old cards title
 export const fetchOldCardsTitle = async (cardId) => {
   try {
-    const response = await axiosInstance.get(`/old-cards/${cardId}`, {
+    const response = await axiosInstance.get(`/get-old-card-title/${cardId}`, {
       validateStatus: () => true,
     });
     return response.data;
@@ -49,6 +49,18 @@ export const updateCard = async (payload) => {
         validateStatus: () => true,
       }
     );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+//delete card
+export const deleteCard = async (cardId) => {
+  try {
+    const response = await axiosInstance.delete(`/delete-card/${cardId}`, {
+      validateStatus: () => true,
+    });
     return response.data;
   } catch (error) {
     throw error.response.data;

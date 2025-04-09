@@ -20,7 +20,7 @@ import {
   updateList,
   deleteList,
 } from "../../apicalls/list";
-import { InputAdornment, IconButton } from "@mui/material";
+import { InputAdornment } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import {
@@ -28,6 +28,7 @@ import {
   fetchAllCards,
   fetchOldCardsTitle,
   updateCard,
+  deleteCard,
 } from "../../apicalls/card";
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -189,12 +190,25 @@ export default function Board() {
     }
   };
 
+  //handle fetch old card title
+  const handleOldCardsTitle = async (cardId) => {
+    try {
+      const response = await fetchOldCardsTitle(cardId);
+      if (response.isSuccess) {
+        setEditingCardTitle(response.cardTitle);
+      } else {
+        console.error("Error fetching old card title:", response.message);
+      }
+    } catch (error) {
+      console.error("Error fetching old card title:", error);
+    }
+  };
+
   //fetch old list title
   const fetchOldListTitle = async (listId) => {
     try {
       const response = await getOldListTitle(listId);
       if (response.isSuccess) {
-        console.log(response.title);
         setNewListTitle(response.title);
       } else {
         console.error("Error fetching old list title:", response.message);
@@ -214,6 +228,31 @@ export default function Board() {
       }
     } catch (error) {
       console.error("Error fetching boards:", error);
+    }
+  };
+
+  //handle delete card
+  const handleDeleteCard = async (cardId, listId) => {
+    try {
+      const response = await deleteCard(cardId);
+
+      if (response.isSuccess) {
+        setCardsByList((prev) => {
+          const updated = { ...prev };
+          if (updated[listId]) {
+            updated[listId] = updated[listId].filter(
+              (card) => card.id !== cardId
+            );
+          }
+          return updated;
+        });
+      } else {
+        console.error("Error deleting card:", response.message);
+        alert("Failed to delete card from server");
+      }
+    } catch (error) {
+      console.error("Error deleting card:", error);
+      alert("An error occurred while deleting the card");
     }
   };
 
@@ -372,6 +411,7 @@ export default function Board() {
                                           style={{ height: "40px" }}
                                           onClick={() => {
                                             setCardEditMode(false);
+                                            handleUpdateCard(card.id, list.id);
                                           }}
                                         >
                                           OK
@@ -390,12 +430,19 @@ export default function Board() {
                                         </Typography>
                                       </Box>
                                       <Box>
-                                        <DeleteOutlineIcon className="cursor-pointer" />
+                                        <DeleteOutlineIcon
+                                          className="cursor-pointer"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleDeleteCard(card.id, list.id);
+                                          }}
+                                        />
                                         <EditOutlinedIcon
                                           className="cursor-pointer ml-1"
                                           onClick={() => {
                                             setCardEditMode(true);
                                             setEditingCardId(card.id);
+                                            handleOldCardsTitle(card.id);
                                           }}
                                         />
                                       </Box>

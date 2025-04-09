@@ -95,3 +95,26 @@ exports.updateCard = async (req, res) => {
     });
   }
 };
+
+//delete card
+exports.deleteCard = async (req, res) => {
+  const id = req.params.cardId;
+
+  try {
+    const cardDoc = await Card.findOne({ where: { id } });
+
+    if (!cardDoc) {
+      return res.status(404).json({
+        message: "Card not found",
+        isSuccess: false,
+      });
+    }
+    await Card.destroy({ where: { id } });
+    return res.status(200).json({
+      message: "Card deleted successfully",
+      isSuccess: true,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -16,4 +16,7 @@ router.get("/get-old-card-title/:cardId", cardController.getOldCardTitle);
 //update card
 router.put("/update-card/:cardId", cardController.updateCard);
 
+//delete card
+router.delete("/delete-card/:cardId", cardController.deleteCard);
+
 module.exports = router;
