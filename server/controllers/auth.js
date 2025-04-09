@@ -1,9 +1,18 @@
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { validationResult } = require("express-validator");
 
 //create new user
 exports.createUser = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      isSuccess: false,
+      message: errors.array()[0].msg,
+    });
+  }
   const { email, password } = req.body;
 
   try {
@@ -38,6 +47,15 @@ exports.createUser = async (req, res) => {
 
 //login user
 exports.loginUser = async (req, res) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+      isSuccess: false,
+      message: errors.array()[0].msg,
+    });
+  }
+
   const { email, password } = req.body;
 
   try {

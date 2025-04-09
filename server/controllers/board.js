@@ -4,6 +4,13 @@ const Board = require("../models/board");
 exports.createBoard = async (req, res) => {
   const { title, userId } = req.body;
 
+  if (!title || title.trim() === "") {
+    return res.status(400).json({
+      message: "Title cannot be empty.",
+      isSuccess: false,
+    });
+  }
+
   try {
     await Board.create({
       title,
@@ -55,6 +62,13 @@ exports.getAllBoards = async (req, res) => {
 exports.updateBoard = async (req, res) => {
   const { title } = req.body;
   const { id } = req.params;
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({
+      message: "Title cannot be empty.",
+      isSuccess: false,
+    });
+  }
 
   try {
     const boardDoc = await Board.findOne({ where: { id } });

@@ -143,65 +143,75 @@ function Index() {
             ) : (
               <></>
             )}
-            {board.map((item) => (
-              <Card
-                sx={{ minWidth: 275 }}
-                className="mt-4 cursor-pointer"
-                key={item.id}
-                classes={{ root: "w-[80%] bg-amber-200" }}
-                onClick={() => {
-                  navigate(`/board/${item.id}`);
-                }}
-              >
-                <CardContent>
-                  {editingBoardId === item.id ? (
-                    <div className="flex gap-1 ">
-                      <TextField
-                        fullWidth
-                        value={editingTitle}
-                        onChange={(e) => {
-                          setEditingTitle(e.target.value);
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                      />
+            {board.length < 1 ? (
+              <>
+                <p className=" h-50 flex justify-center items-center text-4xl text-blue-700">
+                  No Boards To Show
+                </p>
+              </>
+            ) : (
+              <>
+                {board.map((item) => (
+                  <Card
+                    sx={{ minWidth: 275 }}
+                    className="mt-4 cursor-pointer"
+                    key={item.id}
+                    classes={{ root: "w-[80%] bg-amber-200" }}
+                    onClick={() => {
+                      navigate(`/board/${item.id}`);
+                    }}
+                  >
+                    <CardContent>
+                      {editingBoardId === item.id ? (
+                        <div className="flex gap-1 ">
+                          <TextField
+                            fullWidth
+                            value={editingTitle}
+                            onChange={(e) => {
+                              setEditingTitle(e.target.value);
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                          <Button
+                            size="small"
+                            variant="contained"
+                            onClick={(e) => {
+                              handleUpdateBoard(item.id, editingTitle);
+                              e.stopPropagation();
+                            }}
+                          >
+                            OK
+                          </Button>
+                        </div>
+                      ) : (
+                        <Typography variant="body2">{item.title}</Typography>
+                      )}
+                    </CardContent>
+                    <CardActions>
                       <Button
                         size="small"
-                        variant="contained"
                         onClick={(e) => {
-                          handleUpdateBoard(item.id, editingTitle);
+                          setEditingBoardId(item.id);
+                          setEditingTitle(item.title);
                           e.stopPropagation();
                         }}
                       >
-                        OK
+                        Edit
                       </Button>
-                    </div>
-                  ) : (
-                    <Typography variant="body2">{item.title}</Typography>
-                  )}
-                </CardContent>
-                <CardActions>
-                  <Button
-                    size="small"
-                    onClick={(e) => {
-                      setEditingBoardId(item.id);
-                      setEditingTitle(item.title);
-                      e.stopPropagation();
-                    }}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    size="small"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteBoard(item.id);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>
-            ))}
+                      <Button
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteBoard(item.id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </CardActions>
+                  </Card>
+                ))}
+              </>
+            )}
             <div className="mt-50"></div>
           </section>
         </>

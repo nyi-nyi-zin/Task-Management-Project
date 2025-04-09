@@ -16,13 +16,7 @@ import { useParams } from "react-router-dom";
 import { InputAdornment } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import {
-  createCard,
-  fetchAllCards,
-  fetchOldCardsTitle,
-  updateCard,
-  deleteCard,
-} from "../../apicalls/card";
+import { fetchOldCardsTitle } from "../../apicalls/card";
 import { useList } from "../../hooks/useList";
 import { useCard } from "../../hooks/useCard";
 
@@ -213,7 +207,7 @@ export default function Board() {
 
   return (
     <>
-      <section style={{ minHeight: "100vh" }} className="bg-gray-100">
+      <section style={{ minHeight: "100vh" }}>
         <div className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
           Board's Name "{boardDetails.title}"
         </div>

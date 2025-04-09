@@ -4,6 +4,13 @@ const List = require("../models/list");
 exports.createList = async (req, res) => {
   const { title, boardId } = req.body;
 
+  if (!title || title.trim() === "") {
+    return res.status(400).json({
+      message: "Title  cannot be empty.",
+      isSuccess: false,
+    });
+  }
+
   try {
     const newList = await List.create({
       title,
@@ -50,6 +57,13 @@ exports.getAllLists = async (req, res) => {
 exports.updateList = async (req, res) => {
   const { title } = req.body;
   const id = req.params.listId;
+
+  if (!title || title.trim() === "") {
+    return res.status(400).json({
+      message: "Title  and cannot be empty.",
+      isSuccess: false,
+    });
+  }
 
   try {
     const list = await List.findOne({ where: { id } });

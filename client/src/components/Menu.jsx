@@ -6,6 +6,7 @@ import MenuItem from "@mui/material/MenuItem";
 import EditIcon from "@mui/icons-material/Edit";
 import FileCopyIcon from "@mui/icons-material/FileCopy";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -104,7 +105,7 @@ export default function CustomizedMenus({
           }}
           disableRipple
         >
-          <FileCopyIcon />
+          <DeleteOutlineIcon />
           Delete
         </MenuItem>
       </StyledMenu>
