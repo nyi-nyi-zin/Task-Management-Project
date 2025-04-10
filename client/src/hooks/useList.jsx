@@ -36,6 +36,7 @@ export const useList = (boardId) => {
   }, [boardId]);
 
   const addList = async (title) => {
+    setLoading(true);
     try {
       const response = await createNewList({ boardId, title });
       if (response.isSuccess) {
@@ -45,6 +46,8 @@ export const useList = (boardId) => {
       }
     } catch (err) {
       setError(err.message || "Failed to create list.");
+    } finally {
+      setLoading(false);
     }
   };
 

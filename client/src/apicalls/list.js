@@ -3,7 +3,7 @@ import { axiosInstance } from "./axiosInstance";
 //create new list
 export const createNewList = async (payload) => {
   try {
-    const response = await axiosInstance.post("/create-list", payload);
+    const response = await axiosInstance.post("/board/create-list", payload);
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -27,7 +27,7 @@ export const updateList = async (payload) => {
   console.log("Updating list with payload:", payload);
   try {
     const response = await axiosInstance.put(
-      `/update-list/${payload.listId}`,
+      `/board/update-list/${payload.listId}`,
       { title: payload.title },
       {
         validateStatus: () => true,
@@ -44,9 +44,12 @@ export const updateList = async (payload) => {
 //fetch old list title
 export const getOldListTitle = async (listId) => {
   try {
-    const response = await axiosInstance.get(`/get-old-list-title/${listId}`, {
-      validateStatus: () => true,
-    });
+    const response = await axiosInstance.get(
+      `/board/get-old-list-title/${listId}`,
+      {
+        validateStatus: () => true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -56,9 +59,12 @@ export const getOldListTitle = async (listId) => {
 //delete list
 export const deleteList = async (listId) => {
   try {
-    const response = await axiosInstance.delete(`/delete-list/${listId}`, {
-      validateStatus: () => true,
-    });
+    const response = await axiosInstance.delete(
+      `/board/delete-list/${listId}`,
+      {
+        validateStatus: () => true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;

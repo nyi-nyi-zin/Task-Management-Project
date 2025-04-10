@@ -5,26 +5,36 @@ const router = Router();
 const cardController = require("../controllers/card");
 
 //create new card
-router.post("/create-card", authMiddleware, cardController.createcard);
+router.post(
+  "/board/list/create-card",
+  authMiddleware,
+  cardController.createcard
+);
 
 //fetch all cards
-router.get("/cards/:listId", authMiddleware, cardController.getAllCards);
+router.get("/board/:listId/cards", authMiddleware, cardController.getAllCards);
 
 //fetch old card title
 router.get(
-  "/get-old-card-title/:cardId",
-  authMiddleware,
-  cardController.getOldCardTitle
+  "/board/list/get-old-card-title/:cardId",
+  cardController.getOldCardData
 );
 
 //update card
-router.put("/update-card/:cardId", authMiddleware, cardController.updateCard);
+router.put(
+  "/board/list/update-card/:cardId",
+  authMiddleware,
+  cardController.updateCard
+);
 
 //delete card
 router.delete(
-  "/delete-card/:cardId",
+  "/board/list/delete-card/:cardId",
   authMiddleware,
   cardController.deleteCard
 );
+
+//add card desc
+router.post("/board/list/create-card-desc", cardController.createDesc);
 
 module.exports = router;

@@ -3,9 +3,13 @@ import { axiosInstance } from "./axiosInstance";
 // Create a new card
 export const createCard = async (payload) => {
   try {
-    const response = await axiosInstance.post("/create-card", payload, {
-      validateStatus: () => true,
-    });
+    const response = await axiosInstance.post(
+      "/board/list/create-card",
+      payload,
+      {
+        validateStatus: () => true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -15,7 +19,7 @@ export const createCard = async (payload) => {
 // Fetch all cards
 export const fetchAllCards = async (listId) => {
   try {
-    const response = await axiosInstance.get(`/cards/${listId}`, {
+    const response = await axiosInstance.get(`/board/${listId}/cards`, {
       validateStatus: () => true,
     });
     return response.data;
@@ -30,9 +34,12 @@ export const fetchAllCards = async (listId) => {
 //fetch old cards title
 export const fetchOldCardsTitle = async (cardId) => {
   try {
-    const response = await axiosInstance.get(`/get-old-card-title/${cardId}`, {
-      validateStatus: () => true,
-    });
+    const response = await axiosInstance.get(
+      `/board/list/get-old-card-title/${cardId}`,
+      {
+        validateStatus: () => true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -43,7 +50,23 @@ export const fetchOldCardsTitle = async (cardId) => {
 export const updateCard = async (payload) => {
   try {
     const response = await axiosInstance.put(
-      `/update-card/${payload.cardId}`,
+      `/board/list/update-card/${payload.cardId}`,
+      payload,
+      {
+        validateStatus: () => true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response.data;
+  }
+};
+
+//update card Desc
+export const createDesc = async (payload) => {
+  try {
+    const response = await axiosInstance.post(
+      `/board/list/create-card-desc/${payload.cardId}`,
       payload,
       {
         validateStatus: () => true,
@@ -58,9 +81,12 @@ export const updateCard = async (payload) => {
 //delete card
 export const deleteCard = async (cardId) => {
   try {
-    const response = await axiosInstance.delete(`/delete-card/${cardId}`, {
-      validateStatus: () => true,
-    });
+    const response = await axiosInstance.delete(
+      `/board/list/delete-card/${cardId}`,
+      {
+        validateStatus: () => true,
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response.data;

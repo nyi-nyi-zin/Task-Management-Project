@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 
 @layer base {
@@ -8,10 +7,16 @@
     margin: 0;
     box-sizing: border-box;
     font-family: "Poppins", "Noto Sans Myanmar", "Pyidaungsu", "Myanmar Text",
-      sans-serif !important;
+      sans-serif;
   }
+}
+
+input,
+textarea {
+  font-family: "Myanmar Text", "Noto Sans Myanmar", "Zawgyi-One", sans-serif;
 }
 
 body {
   background: #eef4ff;
+  font-family: "Poppins", "Noto Sans Myanmar", "Myanmar Text", sans-serif;
 }

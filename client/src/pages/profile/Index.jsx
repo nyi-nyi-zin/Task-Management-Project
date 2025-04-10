@@ -14,9 +14,12 @@ import {
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
+import CircularProgress from "@mui/material/CircularProgress";
 
 function Index() {
   const { user } = useSelector((state) => state.reducer.user);
+  const [isLoading, setIsLoading] = useState(false);
+
   const [board, setBoards] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [boardName, setBoardName] = useState("");
@@ -26,6 +29,7 @@ function Index() {
   const textFieldRef = useRef(null);
 
   const fetchAllBoards = async () => {
+    setIsLoading(true);
     try {
       const response = await fetchBoards(user.id);
       if (response.isSuccess) {
@@ -35,6 +39,8 @@ function Index() {
       }
     } catch (error) {
       console.error("Error fetching boards:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -143,73 +149,85 @@ function Index() {
             ) : (
               <></>
             )}
-            {board.length < 1 ? (
+            {isLoading ? (
               <>
-                <p className=" h-50 flex justify-center items-center text-4xl text-blue-700">
-                  No Boards To Show
-                </p>
+                <Box sx={{ display: "flex" }}>
+                  <CircularProgress />
+                </Box>
               </>
             ) : (
               <>
-                {board.map((item) => (
-                  <Card
-                    sx={{ minWidth: 275 }}
-                    className="mt-4 cursor-pointer"
-                    key={item.id}
-                    classes={{ root: "w-[80%] bg-amber-200" }}
-                    onClick={() => {
-                      navigate(`/board/${item.id}`);
-                    }}
-                  >
-                    <CardContent>
-                      {editingBoardId === item.id ? (
-                        <div className="flex gap-1 ">
-                          <TextField
-                            fullWidth
-                            value={editingTitle}
-                            onChange={(e) => {
-                              setEditingTitle(e.target.value);
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                          />
+                {board.length < 1 ? (
+                  <>
+                    <p className=" h-50 flex justify-center items-center text-4xl text-blue-700">
+                      No Boards To Show
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    {board.map((item) => (
+                      <Card
+                        sx={{ minWidth: 275 }}
+                        className="mt-4 cursor-pointer"
+                        key={item.id}
+                        classes={{ root: "w-[80%] bg-amber-200" }}
+                        onClick={() => {
+                          navigate(`/board/${item.id}`);
+                        }}
+                      >
+                        <CardContent>
+                          {editingBoardId === item.id ? (
+                            <div className="flex gap-1 ">
+                              <TextField
+                                fullWidth
+                                value={editingTitle}
+                                onChange={(e) => {
+                                  setEditingTitle(e.target.value);
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                              <Button
+                                size="small"
+                                variant="contained"
+                                onClick={(e) => {
+                                  handleUpdateBoard(item.id, editingTitle);
+                                  e.stopPropagation();
+                                }}
+                              >
+                                OK
+                              </Button>
+                            </div>
+                          ) : (
+                            <Typography variant="body2">
+                              {item.title}
+                            </Typography>
+                          )}
+                        </CardContent>
+                        <CardActions>
                           <Button
                             size="small"
-                            variant="contained"
                             onClick={(e) => {
-                              handleUpdateBoard(item.id, editingTitle);
+                              setEditingBoardId(item.id);
+                              setEditingTitle(item.title);
                               e.stopPropagation();
                             }}
                           >
-                            OK
+                            Edit
                           </Button>
-                        </div>
-                      ) : (
-                        <Typography variant="body2">{item.title}</Typography>
-                      )}
-                    </CardContent>
-                    <CardActions>
-                      <Button
-                        size="small"
-                        onClick={(e) => {
-                          setEditingBoardId(item.id);
-                          setEditingTitle(item.title);
-                          e.stopPropagation();
-                        }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteBoard(item.id);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </CardActions>
-                  </Card>
-                ))}
+                          <Button
+                            size="small"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteBoard(item.id);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </CardActions>
+                      </Card>
+                    ))}
+                  </>
+                )}
               </>
             )}
             <div className="mt-50"></div>

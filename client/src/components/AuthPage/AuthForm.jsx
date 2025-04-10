@@ -63,7 +63,9 @@ const AuthForm = ({ isLoginPage }) => {
           setMessage(response.message);
           setSeverity("success");
           setOpen(true);
-          navigate("/login");
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
         } else {
           throw new Error(response.message);
         }
@@ -77,23 +79,22 @@ const AuthForm = ({ isLoginPage }) => {
   };
 
   return (
-    <section className="w-full flex justify-center items-center h-screen flex-col">
-      <h1 className="text-3xl font-bold mb-4 text-blue-600  w-[100vw] text-center ">
+    <section className="w-full flex justify-center items-center h-screen flex-col px-4">
+      <h1 className="text-3xl font-bold mb-4 text-blue-600  text-center w-full ">
         {isLoginPage ? "LOGIN" : "REGISTER"}
       </h1>
 
-      <div className=" w-[250px] mb-45 mr-29">
+      <div className="w-full max-w-sm">
         <Box
           component="form"
           onSubmit={handleOnSubmit}
           sx={{
-            width: 100,
-            height: 100,
             borderRadius: 1,
           }}
+          className=" w-full p-4"
         >
           {open && (
-            <Alert severity={severity} sx={{ mb: 2 }} className="w-92">
+            <Alert severity={severity} sx={{ mb: 2 }} className="w-full">
               {message}
             </Alert>
           )}
@@ -102,7 +103,8 @@ const AuthForm = ({ isLoginPage }) => {
             name="email"
             type="email"
             required
-            className="w-92 p-23"
+            fullWidth
+            className="w-full max-w-md p-2 text-base sm:text-sm sm:p-1  "
             margin="normal"
           />
 
@@ -111,7 +113,7 @@ const AuthForm = ({ isLoginPage }) => {
             name="password"
             type={showPassword ? "text" : "password"}
             required
-            className="w-92"
+            className="w-full max-w-md p-2 text-base sm:text-sm sm:p-1"
             margin="normal"
             variant="outlined"
             InputProps={{

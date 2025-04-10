@@ -11,6 +11,7 @@ export const useCard = () => {
   const [editingCardTitle, setEditingCardTitle] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [editingCardDesc, setEditingCardDesc] = useState("");
 
   const fetchCards = async (listId) => {
     try {
@@ -46,7 +47,27 @@ export const useCard = () => {
 
   const update = async (cardId, listId) => {
     try {
-      const response = await updateCard({ cardId, title: editingCardTitle });
+      const response = await updateCard({
+        cardId,
+        title: editingCardTitle,
+      });
+      if (response.isSuccess) {
+        await fetchCards(listId);
+      } else {
+        setError(response.message);
+      }
+    } catch (err) {
+      setError(err.message || "Failed to update card.");
+    }
+  };
+
+  //update desc
+  const updateDesc = async (cardId, listId, description) => {
+    try {
+      const response = await updateCard({
+        cardId,
+        description,
+      });
       if (response.isSuccess) {
         await fetchCards(listId);
       } else {
@@ -75,9 +96,11 @@ export const useCard = () => {
   const getOldTitle = async (cardId) => {
     try {
       const response = await fetchOldCardsTitle(cardId);
+      console.log("old title & desc", response);
       if (response.isSuccess) {
         setEditingCardTitle(response.cardTitle);
-        return response.cardTitle;
+        setEditingCardDesc(response.cardDesc);
+        return response;
       } else {
         setError(response.message);
         return "";
@@ -98,5 +121,7 @@ export const useCard = () => {
     getOldTitle,
     error,
     loading,
+    updateDesc,
+    editingCardDesc,
   };
 };
