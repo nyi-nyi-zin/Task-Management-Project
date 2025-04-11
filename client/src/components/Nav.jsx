@@ -18,7 +18,7 @@ const Nav = () => {
   return (
     <nav className="w-full max-w-screen-xl mx-auto flex items-center justify-center text-blue-600 my-4 px-4 sm:px-6 lg:px-8">
       <img
-        src="../../public/a6d9eee51501460c8cb16cdebd24cad8-free.png"
+        src="/a6d9eee51501460c8cb16cdebd24cad8-free.png"
         alt="Logo"
         className="rounded-full w-20 ml-10"
       />
