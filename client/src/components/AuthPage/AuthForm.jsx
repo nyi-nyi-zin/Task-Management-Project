@@ -79,12 +79,12 @@ const AuthForm = ({ isLoginPage }) => {
   };
 
   return (
-    <section className="w-full flex justify-center items-center h-screen flex-col px-4">
+    <section className="w-full flex justify-center items-center h-screen flex-col px-4 ">
       <h1 className="text-3xl font-bold mb-4 text-blue-600  text-center w-full ">
         {isLoginPage ? "LOGIN" : "REGISTER"}
       </h1>
 
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm" style={{ marginBottom: "150px" }}>
         <Box
           component="form"
           onSubmit={handleOnSubmit}

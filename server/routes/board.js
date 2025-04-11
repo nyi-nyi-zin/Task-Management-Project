@@ -6,7 +6,7 @@ const boardController = require("../controllers/board");
 const router = Router();
 
 //get all boards
-router.get("/get-boards", boardController.getAllBoards);
+router.get("/get-boards", authMiddleware, boardController.getAllBoards);
 
 //create new board
 router.post("/create-board", authMiddleware, boardController.createBoard);

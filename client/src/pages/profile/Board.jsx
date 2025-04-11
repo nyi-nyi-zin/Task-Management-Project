@@ -12,7 +12,7 @@ import CustomizedMenus from "../../components/Menu";
 import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { getSingleBoard } from "../../apicalls/board";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { InputAdornment } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -38,6 +38,7 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Board() {
+  const navigate = useNavigate();
   const params = useParams();
   const id = params.boardId;
 
@@ -250,6 +251,12 @@ export default function Board() {
         <div className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
           Board's Name "{boardDetails.title}"
         </div>
+        <button
+          onClick={() => navigate(-1)}
+          className="px-4 py-2 bg-blue-500 text-white  hover:bg-blue-600 mx-5 rounded-md"
+        >
+          Go Back
+        </button>
 
         <>
           <Box
