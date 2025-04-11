@@ -6,6 +6,7 @@ import Login from "./pages/Auth/Login";
 import AuthProvider from "./providers/AuthProvider";
 import Profile from "./pages/profile/Index";
 import Board from "./pages/profile/Board";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -44,6 +45,10 @@ function App() {
               <Board />
             </AuthProvider>
           ),
+        },
+        {
+          path: "*",
+          element: <ErrorPage />,
         },
       ],
     },
