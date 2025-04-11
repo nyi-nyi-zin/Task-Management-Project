@@ -48,7 +48,7 @@ Card.belongsTo(List, { foreignKey: "listId" });
 sequelize
   .sync()
   .then(() => {
-    app.listen(process.env.PORT);
+    app.listen(process.env.PORT || 4000);
   })
   .catch((err) => {
     console.log(err);
