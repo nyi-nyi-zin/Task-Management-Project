@@ -30,6 +30,7 @@ exports.createBoard = async (req, res) => {
 
 //get all boards
 exports.getAllBoards = async (req, res) => {
+  //sent from client side
   const { userId } = req.query;
 
   try {
@@ -126,31 +127,31 @@ exports.deleteBoard = async (req, res) => {
 };
 
 //fetch old board title
-exports.fetchOldBoardTitle = async (req, res) => {
-  const { id } = req.params;
+// exports.fetchOldBoardTitle = async (req, res) => {
+//   const { id } = req.params;
 
-  try {
-    const boardDoc = await Board.findOne({ where: { id } });
+//   try {
+//     const boardDoc = await Board.findOne({ where: { id } });
 
-    if (!boardDoc) {
-      return res.status(404).json({
-        message: "Board not found",
-        isSuccess: false,
-      });
-    }
-    return res.status(200).json({
-      message: "Board title fetched successfully",
-      oldTitle: boardDoc.title,
-      isSuccess: true,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error fetching board title",
-      error: error,
-      isSuccess: false,
-    });
-  }
-};
+//     if (!boardDoc) {
+//       return res.status(404).json({
+//         message: "Board not found",
+//         isSuccess: false,
+//       });
+//     }
+//     return res.status(200).json({
+//       message: "Board title fetched successfully",
+//       oldTitle: boardDoc.title,
+//       isSuccess: true,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Error fetching board title",
+//       error: error,
+//       isSuccess: false,
+//     });
+//   }
+// };
 
 //get single board by id
 exports.getSingleBoard = async (req, res) => {

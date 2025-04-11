@@ -52,10 +52,10 @@ const StyledMenu = styled((props) => (
 }));
 
 export default function CustomizedMenus({
-  handleEditMode,
   listId,
   fetchOldListTitle,
   handleDeleteList,
+  handleListEdit,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -90,7 +90,7 @@ export default function CustomizedMenus({
         <MenuItem
           onClick={async () => {
             fetchOldListTitle(listId);
-            await handleEditMode(listId);
+            await handleListEdit(listId);
             handleClose();
           }}
           disableRipple

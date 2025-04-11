@@ -1,6 +1,7 @@
 import { axiosInstance } from "./axiosInstance";
 
 //create new list
+//hook used
 export const createNewList = async (payload) => {
   try {
     const response = await axiosInstance.post("/board/create-list", payload);
@@ -11,6 +12,7 @@ export const createNewList = async (payload) => {
 };
 
 //get all lists
+//hook used
 export const getAllLists = async (boardId) => {
   try {
     const response = await axiosInstance.get(`/get-lists/${boardId}`, {
@@ -23,6 +25,7 @@ export const getAllLists = async (boardId) => {
 };
 
 //update list
+//hook used
 export const updateList = async (payload) => {
   console.log("Updating list with payload:", payload);
   try {
@@ -42,6 +45,7 @@ export const updateList = async (payload) => {
 };
 
 //fetch old list title
+//hook used
 export const getOldListTitle = async (listId) => {
   try {
     const response = await axiosInstance.get(
@@ -57,6 +61,7 @@ export const getOldListTitle = async (listId) => {
 };
 
 //delete list
+//hook used
 export const deleteList = async (listId) => {
   try {
     const response = await axiosInstance.delete(

@@ -46,14 +46,14 @@ export const deleteBoard = async (id) => {
 };
 
 //fetch old board title
-export const fetchOldBoardTitle = async (id) => {
-  try {
-    const response = await axiosInstance.get(`/get-old-board-title/${id}`);
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
-};
+// export const fetchOldBoardTitle = async (id) => {
+//   try {
+//     const response = await axiosInstance.get(`/get-old-board-title/${id}`);
+//     return response.data;
+//   } catch (error) {
+//     throw error.response.data;
+//   }
+// };
 
 //get single board by id
 export const getSingleBoard = async (id) => {

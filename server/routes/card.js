@@ -17,6 +17,7 @@ router.get("/board/:listId/cards", authMiddleware, cardController.getAllCards);
 //fetch old card title
 router.get(
   "/board/list/get-old-card-title/:cardId",
+  authMiddleware,
   cardController.getOldCardData
 );
 
@@ -35,6 +36,10 @@ router.delete(
 );
 
 //add card desc
-router.post("/board/list/create-card-desc", cardController.createDesc);
+// router.post(
+//   "/board/list/create-card-desc",
+//   authMiddleware,
+//   cardController.createDesc
+// );
 
 module.exports = router;

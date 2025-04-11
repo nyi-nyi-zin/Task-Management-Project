@@ -8,7 +8,7 @@ const listController = require("../controllers/list");
 router.get("/get-lists/:boardId", authMiddleware, listController.getAllLists);
 
 //create new list
-router.post("/board/create-list", listController.createList);
+router.post("/board/create-list", authMiddleware, listController.createList);
 
 //update list
 router.put(

@@ -3,7 +3,6 @@ const List = require("../models/list");
 // Create a new list
 exports.createList = async (req, res) => {
   const { title, boardId } = req.body;
-
   if (!title || title.trim() === "") {
     return res.status(400).json({
       message: "Title  cannot be empty.",

@@ -1,6 +1,7 @@
 import { axiosInstance } from "./axiosInstance";
 
 // Create a new card
+//hook used
 export const createCard = async (payload) => {
   try {
     const response = await axiosInstance.post(
@@ -17,6 +18,7 @@ export const createCard = async (payload) => {
 };
 
 // Fetch all cards
+//hook used
 export const fetchAllCards = async (listId) => {
   try {
     const response = await axiosInstance.get(`/board/${listId}/cards`, {
@@ -47,6 +49,7 @@ export const fetchOldCardsTitle = async (cardId) => {
 };
 
 // Update card title
+//hook used
 export const updateCard = async (payload) => {
   try {
     const response = await axiosInstance.put(
@@ -63,22 +66,23 @@ export const updateCard = async (payload) => {
 };
 
 //update card Desc
-export const createDesc = async (payload) => {
-  try {
-    const response = await axiosInstance.post(
-      `/board/list/create-card-desc/${payload.cardId}`,
-      payload,
-      {
-        validateStatus: () => true,
-      }
-    );
-    return response.data;
-  } catch (error) {
-    throw error.response.data;
-  }
-};
+// export const createDesc = async (payload) => {
+//   try {
+//     const response = await axiosInstance.post(
+//       `/board/list/create-card-desc/${payload.cardId}`,
+//       payload,
+//       {
+//         validateStatus: () => true,
+//       }
+//     );
+//     return response.data;
+//   } catch (error) {
+//     throw error.response.data;
+//   }
+// };
 
 //delete card
+//hook used
 export const deleteCard = async (cardId) => {
   try {
     const response = await axiosInstance.delete(

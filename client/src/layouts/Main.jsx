@@ -5,7 +5,6 @@ const Main = () => {
   return (
     <section className=" mx-auto h-screen max-w-[100%] overflow-y-hidden ">
       <Nav />
-
       <Outlet />
     </section>
   );

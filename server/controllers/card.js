@@ -128,37 +128,37 @@ exports.deleteCard = async (req, res) => {
 };
 
 //add card desc
-exports.createDesc = async (req, res) => {
-  const { description, cardId } = req.body;
+// exports.createDesc = async (req, res) => {
+//   const { description, cardId } = req.body;
 
-  try {
-    const cardDoc = await Card.findOne({
-      where: { id: cardId },
-    });
+//   try {
+//     const cardDoc = await Card.findOne({
+//       where: { id: cardId },
+//     });
 
-    if (!cardDoc) {
-      return res.status(404).json({
-        message: "Card not found",
-        isSuccess: false,
-      });
-    }
+//     if (!cardDoc) {
+//       return res.status(404).json({
+//         message: "Card not found",
+//         isSuccess: false,
+//       });
+//     }
 
-    await Card.update(
-      { description },
-      {
-        where: {
-          id: cardId,
-        },
-      }
-    );
-    return res.status(200).json({
-      message: "Card updated successfully",
-      isSuccess: true,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      message: "Error updating Card",
-      error: error,
-    });
-  }
-};
+//     await Card.update(
+//       { description },
+//       {
+//         where: {
+//           id: cardId,
+//         },
+//       }
+//     );
+//     return res.status(200).json({
+//       message: "Card updated successfully",
+//       isSuccess: true,
+//     });
+//   } catch (error) {
+//     return res.status(500).json({
+//       message: "Error updating Card",
+//       error: error,
+//     });
+//   }
+// };

@@ -22,9 +22,7 @@ import { useCard } from "../../hooks/useCard";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import * as React from "react";
-import CircularProgress from "@mui/material/CircularProgress";
 
 import DialogTitle from "@mui/material/DialogTitle";
 
@@ -40,17 +38,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Board() {
-  const [selectedCard, setSelectedCard] = useState(null);
-  const [open, setOpen] = useState(false);
-  const [showInput, setShowInput] = useState(false);
-
-  const handleClose = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setOpen(false);
-    setCardDesc("");
-  };
-
   const params = useParams();
   const id = params.boardId;
 
@@ -61,6 +48,7 @@ export default function Board() {
     removeList,
     getListTitle,
     loading,
+    editingListTitle,
   } = useList(id);
 
   const {
@@ -72,9 +60,16 @@ export default function Board() {
     setEditingCardTitle,
     updateDesc,
     getOldTitle,
-    editingCardDesc,
-    setEditingCardDesc,
   } = useCard();
+
+  const [selectedCard, setSelectedCard] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setOpen(false);
+  };
 
   const [boardDetails, setBoardDetails] = useState({});
   const [newListTitle, setNewListTitle] = useState("");
@@ -87,13 +82,13 @@ export default function Board() {
   const [editingCardId, setEditingCardId] = useState(null);
   const [newCardTitles, setNewCardTitles] = useState({});
   const [cardsByList, setCardsByList] = useState({});
-  const [cardDesc, setCardDesc] = useState("");
+
   const [descEditMode, setDescEditMode] = useState(true);
   const [editCardDesc, setEditCardDesc] = useState("");
 
   const handleOpenDialog = (card) => {
     setSelectedCard(card);
-    setCardDesc(card.description);
+
     setEditCardDesc(card.description);
     setDescEditMode(false);
     setOpen(true);
@@ -108,6 +103,7 @@ export default function Board() {
     }));
   };
 
+  //fetch single board details
   const fetchBoardDetails = async (id) => {
     try {
       const response = await getSingleBoard(id);
@@ -121,25 +117,29 @@ export default function Board() {
     }
   };
 
-  const handleUpdateList = async (listId, title) => {
-    await editList(listId, title);
+  //handle both list title fetch & update
+  const handleListEdit = async (listId, newTitle = null) => {
+    if (!newTitle) {
+      const title = await getListTitle(listId);
+      setNewListTitle(title);
+      setEditingListId(listId);
+      setEditMode(true);
+      return;
+    }
+
+    await editList(listId, newTitle);
     setNewListTitle("");
     setEditMode(false);
     setEditingListId(null);
   };
 
+  //delete list
   const handleDeleteList = async (listId) => {
     await removeList(listId);
   };
 
-  const handleEditMode = async (listId) => {
-    const title = await getListTitle(listId);
-    setNewListTitle(title);
-    setEditingListId(listId);
-    setEditMode(true);
-  };
-
   //create card
+
   const handleCreateCard = async (listId) => {
     await create(listId, newCardTitles[listId]);
     setNewCardTitles((prev) => ({ ...prev, [listId]: "" }));
@@ -169,10 +169,8 @@ export default function Board() {
       description: description,
     }));
     setEditCardDesc(description);
-    setCardDesc(description);
     setDescEditMode(false);
     setShowInput(false);
-
     await getAllCards(listId);
   };
 
@@ -197,18 +195,13 @@ export default function Board() {
     }
   };
 
-  useEffect(() => {
-    if (selectedCard) {
-      setEditCardDesc(selectedCard.description || "");
-    }
-  }, [selectedCard]);
-
   //fetch old list title
   const fetchOldListTitle = async (listId) => {
     try {
-      const response = await getOldListTitle(listId);
+      const response = await editingListTitle(listId);
       if (response.isSuccess) {
         setNewListTitle(response.title);
+        response.cardDesc;
       } else {
         console.error("Error fetching old list title:", response.message);
       }
@@ -231,18 +224,25 @@ export default function Board() {
   };
 
   useEffect(() => {
+    if (selectedCard) {
+      setEditCardDesc(selectedCard.description || "");
+    }
+  }, [selectedCard]);
+
+  useEffect(() => {
     if (id) {
       fetchBoardDetails(id);
     }
   }, [id]);
 
   useEffect(() => {
+    //if lists exist,fetch all cards according to each list
     if (allLists.length > 0) {
       allLists.forEach((list) => {
         getAllCards(list.id);
       });
     }
-  }, [allLists]);
+  }, [allLists, selectedCard]);
 
   return (
     <>
@@ -305,7 +305,7 @@ export default function Board() {
                                       variant="contained"
                                       size="medium"
                                       onClick={async () => {
-                                        await handleUpdateList(
+                                        await handleListEdit(
                                           list.id,
                                           newListTitle
                                         );
@@ -330,7 +330,7 @@ export default function Board() {
                                 {list.title}
                               </Typography>
                               <CustomizedMenus
-                                handleEditMode={handleEditMode}
+                                handleListEdit={handleListEdit}
                                 listId={list.id}
                                 fetchOldListTitle={fetchOldListTitle}
                                 handleDeleteList={handleDeleteList}
@@ -351,7 +351,6 @@ export default function Board() {
                                     key={card.id}
                                     onClick={() => {
                                       setSelectedCard(card);
-                                      setCardDesc(card.description);
                                       handleOpenDialog(card);
                                     }}
                                     className="mb-2 max-h-16 cursor-pointer "
@@ -520,9 +519,6 @@ export default function Board() {
                                                           );
                                                           setDescEditMode(
                                                             false
-                                                          );
-                                                          setCardDesc(
-                                                            editCardDesc
                                                           );
                                                         }}
                                                       >

@@ -6,7 +6,7 @@ const boardController = require("../controllers/board");
 const router = Router();
 
 //get all boards
-router.get("/get-boards", authMiddleware, boardController.getAllBoards);
+router.get("/get-boards", boardController.getAllBoards);
 
 //create new board
 router.post("/create-board", authMiddleware, boardController.createBoard);
@@ -18,11 +18,11 @@ router.put("/update-board/:id", authMiddleware, boardController.updateBoard);
 router.delete("/delete-board/:id", authMiddleware, boardController.deleteBoard);
 
 //fetch old board title
-router.get(
-  "/get-old-board-title/:id",
-  authMiddleware,
-  boardController.fetchOldBoardTitle
-);
+// router.get(
+//   "/get-old-board-title/:id",
+//   authMiddleware,
+//   boardController.fetchOldBoardTitle
+// );
 
 //get single board by id
 router.get("/get-board/:id", authMiddleware, boardController.getSingleBoard);
