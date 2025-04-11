@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo.png";
 
 const Nav = () => {
   const dispatch = useDispatch();
@@ -18,7 +17,7 @@ const Nav = () => {
 
   return (
     <nav className="w-full max-w-screen-xl mx-auto flex items-center justify-center text-blue-600 my-4 px-4 sm:px-6 lg:px-8">
-      <img src={logo} alt="Logo" className="rounded-full w-20 ml-10" />
+      <img src="/logo.png" alt="Logo" className="rounded-full w-20 ml-10" />
       {user ? (
         <section className="flex justify-end items-center gap-5 ml-auto">
           <div className="font-medium text-xl">
