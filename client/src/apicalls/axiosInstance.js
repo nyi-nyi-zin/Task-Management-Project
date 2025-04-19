@@ -21,3 +21,17 @@ axiosInstance.interceptors.request.use(
     return Promise.reject(err);
   }
 );
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const status = error?.response?.status;
+
+    if (status === 401) {
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    }
+
+    return Promise.reject(error);
+  }
+);

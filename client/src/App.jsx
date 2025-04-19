@@ -46,6 +46,7 @@ function App() {
             </AuthProvider>
           ),
         },
+
         {
           path: "*",
           element: <ErrorPage />,

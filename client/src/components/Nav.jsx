@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Nav = () => {
   const dispatch = useDispatch();
@@ -16,10 +17,15 @@ const Nav = () => {
   };
 
   return (
-    <nav className="w-full max-w-screen-xl mx-auto flex items-center justify-center text-blue-600 my-4 px-4 sm:px-6 lg:px-8">
-      <img src="/logo.png" alt="Logo" className="rounded-full w-20 ml-10" />
+    <nav className="w-full h-25 mx-auto flex items-center justify-center text-blue-600   sm:px-6 lg:px-8 bg-blue-800 shadow-lg  ">
+      <img
+        src="/logo.png"
+        alt="Logo"
+        className="rounded-full w-20 ml-10 border-white border"
+      />
+
       {user ? (
-        <section className="flex justify-end items-center gap-5 ml-auto">
+        <section className="flex justify-end items-center gap-5 ml-auto text-white">
           <div className="font-medium text-xl">
             <Link to={"/profile"}>Profile</Link>
           </div>

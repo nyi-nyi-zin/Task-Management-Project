@@ -44,7 +44,9 @@ const AuthForm = ({ isLoginPage }) => {
           setSeverity("success");
           setOpen(true);
           localStorage.setItem("token", response.token);
-          dispatch(setUser(response.user));
+          //AuthProvider ထဲမှာ setUser ကိုသုံးပေးပြီးသားမို့မလိုအပ်တော့
+          // dispatch(setUser(response.user));
+          // console.log(response.user)
           navigate("/profile");
         } else {
           throw new Error(response.message);

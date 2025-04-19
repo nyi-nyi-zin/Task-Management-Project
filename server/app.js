@@ -34,8 +34,8 @@ app.use(authRoutes);
 app.use(boardRoutes);
 app.use(listRoutes);
 app.use(cardRoutes);
-// Associations
 
+// Associations
 User.hasMany(Board, { foreignKey: "userId", onDelete: "CASCADE" });
 Board.belongsTo(User, { foreignKey: "userId" });
 

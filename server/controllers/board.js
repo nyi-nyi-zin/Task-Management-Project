@@ -2,7 +2,8 @@ const Board = require("../models/board");
 
 //create new board
 exports.createBoard = async (req, res) => {
-  const { title, userId } = req.body;
+  const { title } = req.body;
+  const userId = req.userId;
 
   if (!title || title.trim() === "") {
     return res.status(400).json({
@@ -30,8 +31,7 @@ exports.createBoard = async (req, res) => {
 
 //get all boards
 exports.getAllBoards = async (req, res) => {
-  //sent from client side
-  const { userId } = req.query;
+  const userId = req.userId;
 
   try {
     if (!userId) {
@@ -63,6 +63,7 @@ exports.getAllBoards = async (req, res) => {
 exports.updateBoard = async (req, res) => {
   const { title } = req.body;
   const { id } = req.params;
+  const userId = req.userId;
 
   if (!title || title.trim() === "") {
     return res.status(400).json({
@@ -80,6 +81,15 @@ exports.updateBoard = async (req, res) => {
         isSuccess: false,
       });
     }
+
+    //Check if current user is the owner of the board
+    if (boardDoc.userId !== userId) {
+      return res.status(403).json({
+        message: "You are not authorized to update this board",
+        isSuccess: false,
+      });
+    }
+
     await Board.update(
       { title },
       {

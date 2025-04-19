@@ -89,7 +89,6 @@ export default function CustomizedMenus({
       >
         <MenuItem
           onClick={async () => {
-            fetchOldListTitle(listId);
             await handleListEdit(listId);
             handleClose();
           }}

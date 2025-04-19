@@ -89,6 +89,7 @@ exports.loginUser = async (req, res) => {
       message: "Login successful",
       isSuccess: true,
       token,
+      user: userDoc,
     });
   } catch (error) {
     return res.status(500).json({
@@ -105,7 +106,10 @@ exports.checkCurrentUser = async (req, res) => {
     });
 
     if (!userDoc) {
-      throw new Error("Unauthorized User");
+      return res.status(401).json({
+        isSuccess: false,
+        message: "User not found",
+      });
     }
     return res.status(200).json({
       isSuccess: true,
