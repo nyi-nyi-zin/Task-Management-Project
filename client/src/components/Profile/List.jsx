@@ -45,8 +45,8 @@ function List({
 }) {
   const navigate = useNavigate();
   return (
-    <section style={{ paddingTop: "96px" }}>
-      <div className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
+    <section className="pt-40 overflow-y-hidden h-screen w-full ">
+      <div className="text-blue-600 text-4xl font-bold flex justify-center items-center">
         Board's Name "{boardDetails.title}"
       </div>
       <button
@@ -59,7 +59,6 @@ function List({
       <Box
         sx={{
           display: "flex",
-          overflowX: "auto", // horizontal scroll
           padding: 2,
           gap: 3,
         }}
