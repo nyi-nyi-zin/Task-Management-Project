@@ -29,7 +29,7 @@ function Board({
   const navigate = useNavigate();
 
   return (
-    <section className=" min-h-screen">
+    <section className=" min-h-screen " style={{ paddingTop: "100px" }}>
       {user ? (
         <>
           <p className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
