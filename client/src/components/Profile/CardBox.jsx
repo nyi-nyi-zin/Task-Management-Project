@@ -60,7 +60,7 @@ function CardBox({
   };
 
   return (
-    <section>
+    <section className="max-h-screen">
       <Box
         sx={{
           maxHeight: 260,

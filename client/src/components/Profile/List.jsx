@@ -45,7 +45,7 @@ function List({
 }) {
   const navigate = useNavigate();
   return (
-    <section style={{ minHeight: "100vh" }}>
+    <section>
       <div className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">
         Board's Name "{boardDetails.title}"
       </div>

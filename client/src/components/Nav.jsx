@@ -25,7 +25,7 @@ const Nav = () => {
       />
 
       {user ? (
-        <section className="flex justify-end items-center gap-5 ml-auto text-white">
+        <section className="flex justify-end items-center gap-5 ml-auto text-white pr-10">
           <div className="font-medium text-xl">
             <Link to={"/profile"}>Profile</Link>
           </div>
@@ -37,7 +37,7 @@ const Nav = () => {
           </div>
         </section>
       ) : (
-        <div className="flex justify-end items-center gap-5 ml-auto font-medium text-2xl">
+        <div className="flex justify-end items-center gap-5 ml-auto font-medium text-2xl pr-10">
           <Link to={"/login"}>Login</Link>
           <Link to={"/register"}>Register</Link>
         </div>

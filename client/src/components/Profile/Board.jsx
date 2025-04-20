@@ -29,7 +29,7 @@ function Board({
   const navigate = useNavigate();
 
   return (
-    <section className="h-screen overflow-auto bg-amber-100">
+    <section className=" min-h-screen">
       {user ? (
         <>
           <p className="text-blue-600 text-4xl font-bold flex justify-center items-center h-20 w-full">

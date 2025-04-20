@@ -212,7 +212,7 @@ export default function Board() {
 
   return (
     <>
-      <div className="bg-sky-100">
+      <div className="bg-green-100">
         <List
           boardDetails={boardDetails}
           allLists={allLists}
