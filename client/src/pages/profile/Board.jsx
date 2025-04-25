@@ -1,5 +1,3 @@
-import { Paper } from "@mui/material";
-import { styled } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 import { getSingleBoard } from "../../apicalls/board";
 import { useParams } from "react-router-dom";
@@ -9,17 +7,6 @@ import { useCard } from "../../hooks/useCard";
 
 import * as React from "react";
 import List from "../../components/Profile/List";
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: "center",
-  color: (theme.vars ?? theme).palette.text.secondary,
-  ...theme.applyStyles("dark", {
-    backgroundColor: "#1A2027",
-  }),
-}));
 
 export default function Board() {
   const params = useParams();
@@ -217,7 +204,6 @@ export default function Board() {
           boardDetails={boardDetails}
           allLists={allLists}
           showAddList={showAddList}
-          Item={Item}
           editMode={editMode}
           handleListEdit={handleListEdit}
           handleDeleteList={handleDeleteList}

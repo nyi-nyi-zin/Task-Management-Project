@@ -1,14 +1,13 @@
-import { Box, Typography, Button, TextField } from "@mui/material";
-import CardBox from "../../components/Profile/CardBox";
-import CustomizedMenus from "../Menu";
-import { useNavigate, useParams } from "react-router-dom";
-import { InputAdornment } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
+
+import { useNavigate } from "react-router-dom";
+
+import ListCard from "./ListCard";
 
 function List({
   boardDetails,
   allLists,
   showAddList,
-  Item,
   editMode,
   handleListEdit,
   handleDeleteList,
@@ -45,10 +44,11 @@ function List({
 }) {
   const navigate = useNavigate();
   return (
-    <section className="pt-40 overflow-y-hidden h-screen w-full ">
-      <div className="text-blue-600 text-4xl font-bold flex justify-center items-center">
+    <section className="min-h-screen w-full  pt-40 mb-20 ">
+      <div className="text-blue-600 text-4xl font-bold text-center mx-auto w-full max-w-[90%] break-words">
         Board's Name "{boardDetails.title}"
       </div>
+
       <button
         onClick={() => navigate(-1)}
         className="px-4 py-2 bg-blue-500 text-white  hover:bg-blue-600 mx-5 rounded-md cursor-pointer"
@@ -62,107 +62,43 @@ function List({
           padding: 2,
           gap: 3,
         }}
-        className="w-full"
       >
         {allLists &&
           allLists.map((list) => (
-            <div key={list.id}>
-              <Item className="min-w-[350px] max-w-[350px]">
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    mb: 1,
-                    gap: 0,
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      wordWrap: "break-word",
-                      whiteSpace: "normal",
-                      overflowWrap: "break-word",
-                      wordBreak: "break-word",
-                      maxWidth: "500px",
-                      flex: 1,
-                      alignSelf: "flex-start",
-                    }}
-                  >
-                    {editMode && editingListId === list.id ? (
-                      <Box sx={{ display: "flex" }}>
-                        <TextField
-                          fullWidth
-                          size="small"
-                          value={newListTitle}
-                          onChange={(e) => setNewListTitle(e.target.value)}
-                          InputProps={{
-                            endAdornment: (
-                              <InputAdornment
-                                position="end"
-                                sx={{ marginRight: "-14px", padding: 0 }}
-                              >
-                                <Button
-                                  className="text-nowrap ml-100"
-                                  variant="contained"
-                                  size="medium"
-                                  onClick={async () => {
-                                    await handleListEdit(list.id, newListTitle);
-                                    setNewListTitle("");
-                                    setEditMode(false);
-                                  }}
-                                >
-                                  OK
-                                </Button>
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Box>
-                    ) : (
-                      <>
-                        <div className="flex justify-between items-center ">
-                          <Typography variant="h6" className="pl-3 text-black">
-                            {list.title}
-                          </Typography>
-                          <CustomizedMenus
-                            handleListEdit={handleListEdit}
-                            listId={list.id}
-                            handleDeleteList={handleDeleteList}
-                          />
-                        </div>
-                        <CardBox
-                          list={list}
-                          cardsByList={cardsByList}
-                          showAddCardForList={showAddCardForList}
-                          cardEditMode={cardEditMode}
-                          selectedCard={selectedCard}
-                          descEditMode={descEditMode}
-                          editCardDesc={editCardDesc}
-                          setShowAddCardForList={setShowAddCardForList}
-                          newCardTitles={newCardTitles}
-                          setNewCardTitles={setNewCardTitles}
-                          handleCreateCard={handleCreateCard}
-                          handleDeleteCard={handleDeleteCard}
-                          setCardEditMode={setCardEditMode}
-                          editingCardId={editingCardId}
-                          setEditingCardId={setEditingCardId}
-                          editingCardTitle={editingCardTitle}
-                          setEditingCardTitle={setEditingCardTitle}
-                          handleUpdateCard={handleUpdateCard}
-                          handleOldCardsTitle={handleOldCardsTitle}
-                          setSelectedCard={setSelectedCard}
-                          setEditCardDesc={setEditCardDesc}
-                          setDescEditMode={setDescEditMode}
-                          handleUpdateDesc={handleUpdateDesc}
-                          getOldTitle={getOldTitle}
-                        />
-                      </>
-                    )}
-                  </Typography>
-                </Box>
-              </Item>
-            </div>
+            <ListCard
+              list={list}
+              key={list.id}
+              editMode={editMode}
+              handleListEdit={handleListEdit}
+              handleDeleteList={handleDeleteList}
+              cardsByList={cardsByList}
+              showAddCardForList={showAddCardForList}
+              cardEditMode={cardEditMode}
+              descEditMode={descEditMode}
+              editCardDesc={editCardDesc}
+              setSelectedCard={setSelectedCard}
+              selectedCard={selectedCard}
+              setShowAddCardForList={setShowAddCardForList}
+              newCardTitles={newCardTitles}
+              setNewCardTitles={setNewCardTitles}
+              handleCreateCard={handleCreateCard}
+              handleDeleteCard={handleDeleteCard}
+              setCardEditMode={setCardEditMode}
+              editingCardId={editingCardId}
+              setEditingCardId={setEditingCardId}
+              editingCardTitle={editingCardTitle}
+              setEditingCardTitle={setEditingCardTitle}
+              handleUpdateCard={handleUpdateCard}
+              handleOldCardsTitle={handleOldCardsTitle}
+              setEditCardDesc={setEditCardDesc}
+              setDescEditMode={setDescEditMode}
+              handleUpdateDesc={handleUpdateDesc}
+              getOldTitle={getOldTitle}
+              editingListId={editingListId}
+              newListTitle={newListTitle}
+              setNewListTitle={setNewListTitle}
+              setEditMode={setEditMode}
+            />
           ))}
         <div className="flex gap-3 pr-15 ">
           {showAddList ? (

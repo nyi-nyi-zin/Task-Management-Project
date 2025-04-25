@@ -1,13 +1,9 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { CardActions } from "@mui/material";
 import { useSelector } from "react-redux";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router-dom";
+import BoardCard from "./BoardCard";
 
 function Board({
   showForm,
@@ -26,7 +22,6 @@ function Board({
   editingTitle,
 }) {
   const { user } = useSelector((state) => state.reducer.user);
-  const navigate = useNavigate();
 
   return (
     <section className=" min-h-screen " style={{ paddingTop: "100px" }}>
@@ -96,67 +91,16 @@ function Board({
                 ) : (
                   <>
                     {board.map((item) => (
-                      <Card
+                      <BoardCard
+                        item={item}
                         key={item.id}
-                        sx={{ minWidth: 275 }}
-                        className="mt-4 cursor-pointer "
-                        classes={{ root: "w-[80%] bg-amber-200" }}
-                        onClick={() => {
-                          navigate(`/board/${item.id}`);
-                        }}
-                      >
-                        <div className="hover:bg-gray-200">
-                          <CardContent>
-                            {editingBoardId === item.id ? (
-                              <div className="flex gap-1 ">
-                                <TextField
-                                  fullWidth
-                                  value={editingTitle}
-                                  onChange={(e) => {
-                                    setEditingTitle(e.target.value);
-                                  }}
-                                  onClick={(e) => e.stopPropagation()}
-                                />
-                                <Button
-                                  size="small"
-                                  variant="contained"
-                                  onClick={(e) => {
-                                    handleUpdateBoard(item.id, editingTitle);
-                                    e.stopPropagation();
-                                  }}
-                                >
-                                  OK
-                                </Button>
-                              </div>
-                            ) : (
-                              <Typography variant="body2">
-                                {item.title}
-                              </Typography>
-                            )}
-                          </CardContent>
-                          <CardActions>
-                            <Button
-                              size="small"
-                              onClick={(e) => {
-                                setEditingBoardId(item.id);
-                                setEditingTitle(item.title);
-                                e.stopPropagation();
-                              }}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="small"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteBoard(item.id);
-                              }}
-                            >
-                              Delete
-                            </Button>
-                          </CardActions>
-                        </div>
-                      </Card>
+                        editingBoardId={editingBoardId}
+                        setEditingBoardId={setEditingBoardId}
+                        setEditingTitle={setEditingTitle}
+                        editingTitle={editingTitle}
+                        handleUpdateBoard={handleUpdateBoard}
+                        handleDeleteBoard={handleDeleteBoard}
+                      />
                     ))}
                   </>
                 )}

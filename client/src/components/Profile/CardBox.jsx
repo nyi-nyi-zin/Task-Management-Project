@@ -76,10 +76,11 @@ function CardBox({
               onClick={() => {
                 setSelectedCard(card);
                 handleOpenDialog(card);
+                className = "break-words bg-red-400 ";
               }}
-              className="mb-2 max-h-16 cursor-pointer hover:border-blue-800 border border-transparent   "
+              className="mb-2  cursor-pointer hover:border-blue-900 inset-shadow-xs border  border-gray-200"
             >
-              <CardContent className="bg-gray-200 flex justify-between items-center ">
+              <CardContent className=" flex justify-between items-center ">
                 {cardEditMode && editingCardId === card.id ? (
                   <>
                     <Box className="flex w-full gap-2">
@@ -101,7 +102,7 @@ function CardBox({
                           handleUpdateCard(card.id, list.id);
                         }}
                       >
-                        OKNS
+                        OK
                       </Button>
                     </Box>
                   </>
@@ -115,14 +116,14 @@ function CardBox({
                     </Box>
                     <Box>
                       <DeleteOutlineIcon
-                        className="cursor-pointer"
+                        className="hover:shadow-lg hover:shadow-black/80 transition duration-300 rounded-full "
                         onClick={(e) => {
                           e.stopPropagation();
                           handleDeleteCard(card.id, list.id);
                         }}
                       />
                       <EditOutlinedIcon
-                        className="cursor-pointer ml-1"
+                        className="hover:shadow-lg hover:shadow-black/80 transition duration-300 cursor-pointer ml-1 rounded-full"
                         onClick={(e) => {
                           e.stopPropagation();
                           setCardEditMode(true);
